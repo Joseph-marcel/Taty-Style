@@ -6,6 +6,8 @@ import java.util.List;
 import org.springframework.format.annotation.DateTimeFormat;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Temporal;
@@ -22,12 +24,12 @@ public class Stock {
 
 	@Id
 	private String  reference;
-	private String  name;
-	@Column(name="date_existant")
+	private String  title;
 	@Temporal(TemporalType.DATE)
 	@DateTimeFormat(pattern = "yyyy-MM-dd")
 	private Date    dateExistant;
 	private double  niveauStock;
+	@Enumerated(EnumType.STRING)
 	private StockStatus  status;
 	@Column(name="value_stock")
 	private double  valueStock;
