@@ -2,15 +2,13 @@ package com.beauty.taty_style.services;
 
 import java.util.List;
 
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-
 import com.beauty.taty_style.exceptions.InsuffisantQuantityInStock;
 import com.beauty.taty_style.exceptions.ProductNotFoundException;
 import com.beauty.taty_style.exceptions.StockNotFoundException;
 import com.beauty.taty_style.exceptions.StockOperationNotFoundException;
 import com.beauty.taty_style.models.OperationType;
 import com.beauty.taty_style.models.Product;
+import com.beauty.taty_style.models.ProductStatus;
 import com.beauty.taty_style.models.Stock;
 import com.beauty.taty_style.models.StockOperation;
 import com.beauty.taty_style.models.StockStatus;
@@ -29,6 +27,8 @@ public class InstitutServiceImpl implements InstitutService{
 	private StockRepository  stockRepo;
 	private StockOperationRepository  stockOptRepo;
 	
+	
+	
 	//METHOD STOCKREPOSITORY
 	@Override
 	public Stock createStock(Stock stock) {
@@ -37,8 +37,7 @@ public class InstitutServiceImpl implements InstitutService{
 		stock.setTitle(stock.getTitle());
 		stock.setNiveauStock(0);
 		stock.setValueStock(0);
-		stock.getStatus();
-		stock.setStatus(StockStatus.BALANCED);
+		stock.setStatus(StockStatus.EMPTY);
 		stock.setDateExistant(stock.getDateExistant());
 		Stock savedStock = stockRepo.save(stock);
 		
@@ -108,12 +107,13 @@ public class InstitutServiceImpl implements InstitutService{
 		   
 		   stockOpt.setStock(stock);
 		   stockOpt.setProduct(pdt);
+		   stockOpt.setAmount(stockOpt.getQuantity() * pdt.getInStockPrice());
 		   stockOpt.setType(OperationType.CREDIT);
 		   stockOptRepo.save(stockOpt);
 		   
 		   stock.setDateExistant(stockOpt.getDateOperation());
 		   stock.setNiveauStock(stock.getNiveauStock() + stockOpt.getQuantity());
-		   stock.setValueStock(stock.getValueStock() + stockOpt.getAmount());
+		   stock.setValueStock(stock.getValueStock() + (stockOpt.getAmount() * pdt.getInStockPrice()));
 		   stock.setStatus(StockStatus.CREDIT);
 		   stock.getStockOperations().add(stockOpt);
 		   stockRepo.save(stock);
@@ -123,20 +123,53 @@ public class InstitutServiceImpl implements InstitutService{
 		   
 	}
 
+
 	@Override
 	public void debitStockOperation(StockOperation stockOpt, String stockRef,String code) {
 		// TODO Auto-generated method stub
 		Stock stock = getStockByReference(stockRef);
 		Product pdt = getProductByCode(code);
+		List<StockOperation>  creditStockOperations = stock.getStockOperations()
+				                                           .stream()
+				                                           .filter(st -> st.getType() == stockOpt.getType()).toList();
 		
-		//Request to search for product in the current stock
-		if(stockOpt.getQuantity() > stock.getNiveauStock()) throw new InsuffisantQuantityInStock("Quantité insuffisante en stock");
+		for(StockOperation stckOpt:creditStockOperations) {
 			
+			if(stckOpt.getProduct() == pdt) {
+				if(stock.getNiveauStock() < stockOpt.getQuantity()) throw new InsuffisantQuantityInStock("Quantité insuffisante,veuillez réapprovisionner le stock");	
+				stock.setDateExistant(stockOpt.getDateOperation());
+				stock.setNiveauStock(stock.getNiveauStock() - stockOpt.getQuantity());
+				stock.setValueStock(stock.getValueStock() - (stockOpt.getQuantity() * pdt.getOutStockPrice()));
+				stock.setStatus(StockStatus.DEBIT);
+				stock.getStockOperations().add(stockOpt);
+				stockRepo.save(stock);
+				
+				stockOpt.setDateOperation(stockOpt.getDateOperation());
+				stockOpt.setProduct(pdt);
+				stockOpt.setQuantity(stockOpt.getQuantity());
+				stockOpt.setAmount(stockOpt.getQuantity() * pdt.getOutStockPrice());
+				stockOpt.setType(OperationType.DEBIT);
+				stockOpt.setStock(stock);
+				stockOptRepo.save(stockOpt);
+				
+				pdt.setStockOperation(stockOpt);
+				pdt.setOutStockPrice(pdt.getOutStockPrice());
+				pdt.setRecordDate(stockOpt.getDateOperation());
+				pdt.setMargin(pdt.getOutStockPrice() - pdt.getInStockPrice());
+				if(stock.getNiveauStock() < 1) {
+					pdt.setStatus(ProductStatus.INSDISPONIBLE);
+				}
+				pdtRepo.save(pdt);
+				
+			}
+			
+		}
+	    
 		
 	}
 
 	@Override
-	public Page<StockOperation> listStockOperations(String code, int page, int size) {
+	public List<StockOperation> listStockOperations(String ref, int page, int size) {
 		// TODO Auto-generated method stub
 		return null;
 	}
@@ -157,6 +190,9 @@ public class InstitutServiceImpl implements InstitutService{
 	@Override
 	public Product createProduct(Product pdt) {
 		// TODO Auto-generated method stub
+		        pdt.setStatus(ProductStatus.DISPONIBLE);
+		        pdt.setOutStockPrice(0);
+		        pdt.setMargin(0);
 		Product savedProduct = pdtRepo.save(pdt);
 		
 		return savedProduct;
@@ -192,13 +228,6 @@ public class InstitutServiceImpl implements InstitutService{
 		        pdtRepo.delete(existingProduct);
 	}
 
-	@Override
-	public Page<Product> listProducts(int page, int size) {
-		// TODO Auto-generated method stub
-		Page<Product> products = pdtRepo.listProducts(PageRequest.of(page, size));
-		
-		return products;
-	}
 
 	@Override
 	public List<Product> products() {
