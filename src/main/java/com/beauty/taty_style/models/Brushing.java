@@ -6,7 +6,7 @@ import lombok.NoArgsConstructor;
 
 @Entity
 @NoArgsConstructor
-@DiscriminatorValue("HAIV")
-public class HairRemoval extends Allowance{
+@DiscriminatorValue("BRUS")
+public class Brushing extends Allowance{
 
 }

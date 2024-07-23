@@ -4,6 +4,8 @@ package com.beauty.taty_style.models;
 import java.util.Date;
 import org.springframework.format.annotation.DateTimeFormat;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -28,9 +30,11 @@ public  class StockOperation {
 	private Date    dateOperation;
 	private double  quantity;
 	private double  amount;
+	@Enumerated(EnumType.STRING)
 	private OperationType type;
 	@ManyToOne
 	private Stock   stock;
 	@OneToOne(mappedBy = "stockOperation")
 	private Product product;
+	
 }

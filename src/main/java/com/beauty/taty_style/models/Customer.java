@@ -1,13 +1,13 @@
 package com.beauty.taty_style.models;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -15,12 +15,37 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 public class Customer {
 
-	@Id @GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long number;
+	@Id 
+	private String customerId;
 	private String name;
-	private String phoneNumber;
 	@OneToMany(mappedBy = "customer")
 	private List<Bill> bills;
+	
+    public static class CustomerBuilder{
+		
+		private Customer customer = new Customer();
+		
+		
+		public CustomerBuilder customerId(String customerId) {
+			
+			customer.customerId = customerId;
+			return this;
+		}
+		
+		
+		public CustomerBuilder bills() {
+			
+			customer.bills = new ArrayList<Bill>();
+			return this;
+		}
+		
+        
+		public Customer build() {
+			
+			return this.customer;
+		}
+	}
 }

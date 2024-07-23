@@ -8,9 +8,10 @@ import org.springframework.data.jpa.repository.Query;
 import com.beauty.taty_style.models.Product;
 
 
-public interface ProductRepository extends JpaRepository<Product, String>{
+public interface ProductRepository extends JpaRepository<Product, Long>{
 	
 	@Query(value = "SELECT * FROM Product p ORDER BY p.recordDate DESC", nativeQuery = true)
     Page<Product> listProducts(PageRequest pageRequest);
-
+	
+	Product findByDesignation(String designation);
 }
