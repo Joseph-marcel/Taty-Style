@@ -2,6 +2,8 @@ package com.beauty.taty_style.controllers;
 
 import java.util.List;
 
+import javax.naming.InsufficientResourcesException;
+
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -49,18 +51,31 @@ public class StockController {
 	
 
 	
-	@PostMapping("/stocks/{ref}/{pdtId}")
-	public void saveOperation(@PathVariable String ref,@PathVariable Long pdtId,@RequestBody StockOperation stockOpt) {
+	@PostMapping("/stocks/operation/{ref}/{pdtId}")
+	public void saveOperation(@PathVariable String ref,@PathVariable Long pdtId,@RequestBody StockOperation stockOpt) throws InsufficientResourcesException{
 		
-		try {
 			 if(stockOpt.getType() == OperationType.CREDIT) {
 				 optService.creditStockOperation(stockOpt, ref, pdtId);
 			 }else {
-				 optService.debitStockOperation(stockOpt, ref, pdtId);
+				 if(stockOpt.getType() == OperationType.DEBIT){ 
+					 optService.debitStockOperation(stockOpt, ref, pdtId);
+				 }
 			 }
-		}catch (Exception e){
-			
-		}
+	}
+	
+	
+	
+	@GetMapping("/stocks/operations")
+	public List<StockOperation> listStockOperation(){
+		
+		return optService.listStockOperations();
+	}
+	
+	
+	@PostMapping("/stocks/operations/credit/correction/{operationNumber}/{ref}/{pdtId}")
+	public void correctCreditStockOperation(@PathVariable Long operationNumber,@PathVariable String ref,@PathVariable Long pdtId) {
+		
+		optService.updateCreditStockOperation(operationNumber, ref, pdtId);
 	}
 
 }

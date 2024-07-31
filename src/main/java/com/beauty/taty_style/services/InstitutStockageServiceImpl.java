@@ -28,8 +28,9 @@ public class InstitutStockageServiceImpl implements InstitutStockageService{
 		stock.setTitle(stock.getTitle());
 		stock.setDateExistant(stock.getDateExistant());
 		stock.setNiveauStock(0);
-		stock.setValueStock(0);
-		stock.setStatus(StockStatus.EMPTY);
+		stock.setValueStockCredit(0);
+		stock.setValueStockDebit(0);
+		stock.setLastOperationStatus(StockStatus.EMPTY);
 		Stock savedStock = stockRepo.save(stock);
 		
 		return savedStock;
@@ -53,9 +54,10 @@ public class InstitutStockageServiceImpl implements InstitutStockageService{
 		      existingStock.setReference(stock.getReference());
 		      existingStock.setTitle(stock.getTitle());
 		      existingStock.setNiveauStock(stock.getNiveauStock());
-		      existingStock.setValueStock(stock.getValueStock());
+		      existingStock.setValueStockCredit(stock.getValueStockCredit());
+		      existingStock.setValueStockDebit(stock.getValueStockDebit());
 		      existingStock.setDateExistant(stock.getDateExistant());
-		      existingStock.setStatus(stock.getStatus());
+		      existingStock.setLastOperationStatus(stock.getLastOperationStatus());
 	    Stock updatedStock = stockRepo.save(existingStock);
 	    
 		return updatedStock;

@@ -10,7 +10,8 @@ public interface InstitutOperationService {
 	//STOCKOPERATION
     void creditStockOperation(StockOperation stockOpt,String stockRef,Long pdtId);
     void debitStockOperation(StockOperation stockOpt, String stockRef,Long pdtId);
-    List<StockOperation> listStockOperations(String ref,int page,int size);
+    List<StockOperation> listStockOperations();
     StockOperation getStockOperationByNumber(Long number) throws StockOperationNotFoundException;
-   
+    void updateCreditStockOperation(Long operationNumber,String ref,Long pdtId);
+    
 }

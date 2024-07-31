@@ -12,6 +12,7 @@ public interface InstitutProductService {
     Product getProductByPdtId(Long pdtId) throws ProductNotFoundException;
     Product getProductByDesignation(String designation);
     Product updateProduct(Product pdt,Long pdtId);
+    Product setOutStockPrice(Product pdt,Long pdtId);
     Product saveProduct(Product pdt);
     void    deleteProduct(Long pdtId);
     List<Product> products();

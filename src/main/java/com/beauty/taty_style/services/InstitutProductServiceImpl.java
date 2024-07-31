@@ -5,7 +5,6 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.beauty.taty_style.exceptions.ProductNotFoundException;
 import com.beauty.taty_style.models.Product;
 import com.beauty.taty_style.models.ProductStatus;
 import com.beauty.taty_style.repositories.ProductRepository;
@@ -27,8 +26,7 @@ public class InstitutProductServiceImpl implements InstitutProductService{
 	  if(existingPdt==null) {
 		    pdt.setStatus(ProductStatus.DISPONIBLE);
 	        pdt.setOutStockPrice(0);
-	        pdt.setMargin(0);
-	        Product savedProduct = pdtRepo.save(pdt);
+	     Product savedProduct = pdtRepo.save(pdt);
 	    
 	       return savedProduct;
 	  }else {
@@ -43,8 +41,7 @@ public class InstitutProductServiceImpl implements InstitutProductService{
 	public Product getProductByPdtId(Long pdtId) {
 		// TODO Auto-generated method stub
 		Product existingProduct = pdtRepo.findById(pdtId).orElse(null);
-				if(existingProduct == null) throw  new ProductNotFoundException("Ce produit n'est pas disponible");
-		
+				
 		return existingProduct;
 	}
 	
@@ -57,7 +54,6 @@ public class InstitutProductServiceImpl implements InstitutProductService{
 		        existingProduct.setInStockPrice(pdt.getInStockPrice());
 		        existingProduct.setOutStockPrice(pdt.getOutStockPrice());
 		        existingProduct.setRecordDate(pdt.getRecordDate());
-		        existingProduct.setMargin(pdt.getOutStockPrice()-pdt.getOutStockPrice());
 		Product updatedProduct = pdtRepo.save(existingProduct);
 		
 		return updatedProduct;
@@ -105,6 +101,16 @@ public class InstitutProductServiceImpl implements InstitutProductService{
 		Product pdt = pdtRepo.findByDesignation(designation);
 		
 		return pdt;
+	}
+
+
+	@Override
+	public Product setOutStockPrice(Product pdt, Long pdtId) {
+		// TODO Auto-generated method stub
+		Product existingPdt = getProductByPdtId(pdtId);
+		        existingPdt.setOutStockPrice(pdt.getOutStockPrice());
+		        
+		return pdtRepo.save(existingPdt);
 	}
 
 }

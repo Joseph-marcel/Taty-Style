@@ -31,20 +31,23 @@ public class InstitutOperationServiceImpl implements InstitutOperationService{
 		   Stock stock = stockRepo.getReferenceById(ref);
 		   Product pdt = pdtService.getProductByPdtId(pdtId);
 		   
-		   stockOpt.setStock(stock);
-		   stockOpt.setProduct(pdt);
-		   stockOpt.setAmount(stockOpt.getQuantity() * pdt.getInStockPrice());
-		   stockOpt.setType(OperationType.CREDIT);
+		      stockOpt.setStock(stock);
+		      stockOpt.setProduct(pdt);
+		      stockOpt.setDateOperation(stockOpt.getDateOperation());
+		      stockOpt.setQuantity(stockOpt.getQuantity());
+		      stockOpt.setAmount(stockOpt.getQuantity() * pdt.getInStockPrice());
+		      stockOpt.setType(OperationType.CREDIT);
 		   stockOptRepo.save(stockOpt);
 		   
-		   stock.setDateExistant(stockOpt.getDateOperation());
-		   stock.setNiveauStock(stock.getNiveauStock() + stockOpt.getQuantity());
-		   stock.setValueStock(stock.getValueStock() + (stockOpt.getAmount() * pdt.getInStockPrice()));
-		   stock.setStatus(StockStatus.CREDIT);
-		   stock.getStockOperations().add(stockOpt);
+		      stock.setDateExistant(stockOpt.getDateOperation());
+		      stock.setNiveauStock(stock.getNiveauStock() + stockOpt.getQuantity());
+		      stock.setValueStockCredit(stock.getValueStockCredit() + stockOpt.getAmount());
+		      stock.setValueStockDebit(0);
+		      stock.setLastOperationStatus(StockStatus.CREDIT);
+		      stock.getStockOperations().add(stockOpt);
 		   stockRepo.save(stock);
 		   
-		   pdt.setStockOperation(stockOpt);
+		      pdt.getStockOperation().add(stockOpt);
 		   pdtRepo.save(pdt);
 		   
 	}
@@ -56,58 +59,87 @@ public class InstitutOperationServiceImpl implements InstitutOperationService{
 		// TODO Auto-generated method stub
 		Stock stock = stockRepo.getReferenceById(ref);
 		Product pdt = pdtService.getProductByPdtId(pdtId);
-		List<StockOperation>  creditStockOperations = stock.getStockOperations()
-				                                           .stream()
-				                                           .filter(st -> st.getType() == stockOpt.getType()).toList();
 		
-		for(StockOperation stckOpt:creditStockOperations) {
-			
-			if(stckOpt.getProduct() == pdt) {
-				if(stock.getNiveauStock() < stockOpt.getQuantity()) throw new InsuffisantQuantityInStock("Quantité insuffisante,veuillez réapprovisionner le stock");	
-				stock.setDateExistant(stockOpt.getDateOperation());
-				stock.setNiveauStock(stock.getNiveauStock() - stockOpt.getQuantity());
-				stock.setValueStock(stock.getValueStock() - (stockOpt.getQuantity() * pdt.getOutStockPrice()));
-				stock.setStatus(StockStatus.DEBIT);
-				stock.getStockOperations().add(stockOpt);
-				stockRepo.save(stock);
-				
-				stockOpt.setDateOperation(stockOpt.getDateOperation());
-				stockOpt.setProduct(pdt);
-				stockOpt.setQuantity(stockOpt.getQuantity());
-				stockOpt.setAmount(stockOpt.getQuantity() * pdt.getOutStockPrice());
-				stockOpt.setType(OperationType.DEBIT);
-				stockOpt.setStock(stock);
-				stockOptRepo.save(stockOpt);
-				
-				pdt.setStockOperation(stockOpt);
-				pdt.setOutStockPrice(pdt.getOutStockPrice());
-				pdt.setRecordDate(stockOpt.getDateOperation());
-				pdt.setMargin(pdt.getOutStockPrice() - pdt.getInStockPrice());
-				if(stock.getNiveauStock() < 1) {
-					pdt.setStatus(ProductStatus.INSDISPONIBLE);
+		List<StockOperation>  creditStockOperations = stock.getStockOperations().stream().filter(st -> st.getType().equals(OperationType.CREDIT)).toList();
+		double counter = 1;
+			for(StockOperation stckOpt:creditStockOperations) {
+				while(counter < 2) {
+					if(stckOpt.getProduct() == pdt) {
+						if(stock.getNiveauStock() < stockOpt.getQuantity()) throw new InsuffisantQuantityInStock("Il n'y a plus que " + stock.getNiveauStock() + " en stock.");
+						   stockOpt.setDateOperation(stockOpt.getDateOperation());
+						   stockOpt.setProduct(pdt);
+						   stockOpt.setQuantity(stockOpt.getQuantity());
+						   stockOpt.setAmount(stockOpt.getQuantity() * pdt.getOutStockPrice());
+						   stockOpt.setType(OperationType.DEBIT);
+						   stockOpt.setStock(stock);
+						stockOptRepo.save(stockOpt);
+						 
+						stock.setDateExistant(stockOpt.getDateOperation());
+						   stock.setNiveauStock(stock.getNiveauStock() - stockOpt.getQuantity());
+						   stock.setValueStockDebit(stock.getValueStockDebit() + (stockOpt.getQuantity() * pdt.getOutStockPrice()));
+						   stock.setLastOperationStatus(StockStatus.DEBIT);
+						   stock.getStockOperations().add(stockOpt);
+						stockRepo.save(stock);
+						
+						   pdt.getStockOperation().add(stockOpt);
+						   pdt.setRecordDate(stockOpt.getDateOperation());
+						if(stock.getNiveauStock() < 1) {
+							pdt.setStatus(ProductStatus.INSDISPONIBLE);
+						}
+						pdtRepo.save(pdt);
+					}
+					counter++;
 				}
-				pdtRepo.save(pdt);
-				
 			}
-			
-		}
 	}
 	
 	
 	
 	@Override
-	public List<StockOperation> listStockOperations(String ref, int page, int size) {
+	public List<StockOperation> listStockOperations() {
 		// TODO Auto-generated method stub
-		return null;
+		
+		return stockOptRepo.findAll();
 	}
 	
+	
 	@Override
-	public StockOperation getStockOperationByNumber(Long number) {
+	public StockOperation getStockOperationByNumber(Long operationNumber) {
 		// TODO Auto-generated method stub
-		StockOperation stockOpt = stockOptRepo.findById(number)
+		StockOperation stockOpt = stockOptRepo.findById(operationNumber)
 				.orElseThrow(()-> new StockOperationNotFoundException("Cette operation n'existe pas."));
 		
 		return stockOpt;
+	}
+
+
+
+	@Override
+	public void updateCreditStockOperation(Long operationNumber, String ref, Long pdtId) {
+		// TODO Auto-generated method stub
+		
+		Stock stock = stockRepo.getReferenceById(ref);
+		Product pdt = pdtService.getProductByPdtId(pdtId);
+		StockOperation existingStockOpt = getStockOperationByNumber(operationNumber);
+		               existingStockOpt.setDateOperation(existingStockOpt.getDateOperation());
+		               existingStockOpt.setQuantity(existingStockOpt.getQuantity());
+		               existingStockOpt.setType(OperationType.CREDIT);
+		               existingStockOpt.setAmount(existingStockOpt.getQuantity() * pdt.getInStockPrice());
+		               existingStockOpt.setProduct(pdt);
+		               existingStockOpt.setStock(stock);
+		               stockOptRepo.save(existingStockOpt);
+		               
+		               pdt.getStockOperation().add(existingStockOpt);
+		               pdtRepo.save(pdt);
+		               
+		               stock.setDateExistant(existingStockOpt.getDateOperation());
+		               stock.setNiveauStock(stock.getNiveauStock());
+		               stock.setValueStockDebit(0);
+		               stock.setValueStockCredit(stock.getNiveauStock() * pdt.getInStockPrice());
+		               stock.setLastOperationStatus(StockStatus.CREDIT);
+		               stock.getStockOperations().add(existingStockOpt);
+		               stockRepo.save(stock);
+		
 	}
 
 }

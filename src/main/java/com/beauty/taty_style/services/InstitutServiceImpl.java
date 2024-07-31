@@ -47,13 +47,12 @@ import com.beauty.taty_style.repositories.StockOperationRepository;
 import com.beauty.taty_style.repositories.StockRepository;
 
 import lombok.AllArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
+
 
 
 @Service
 @Transactional
 @AllArgsConstructor
-@Slf4j
 public class InstitutServiceImpl implements InstitutService{
 
 	
@@ -74,8 +73,9 @@ public class InstitutServiceImpl implements InstitutService{
 		stock.setReference(stock.getReference());
 		stock.setTitle(stock.getTitle());
 		stock.setNiveauStock(0);
-		stock.setValueStock(0);
-		stock.setStatus(StockStatus.EMPTY);
+		stock.setValueStockCredit(0);
+		stock.setValueStockDebit(0);
+		stock.setLastOperationStatus(StockStatus.EMPTY);
 		stock.setDateExistant(stock.getDateExistant());
 		Stock savedStock = stockRepo.save(stock);
 		
@@ -99,9 +99,10 @@ public class InstitutServiceImpl implements InstitutService{
 		      existingStock.setReference(stock.getReference());
 		      existingStock.setTitle(stock.getTitle());
 		      existingStock.setNiveauStock(stock.getNiveauStock());
-		      existingStock.setValueStock(stock.getValueStock());
+		      existingStock.setValueStockCredit(stock.getValueStockCredit());
+		      existingStock.setValueStockDebit(stock.getValueStockDebit());
 		      existingStock.setDateExistant(stock.getDateExistant());
-		      existingStock.setStatus(stock.getStatus());
+		      existingStock.setLastOperationStatus(stock.getLastOperationStatus());
 	    Stock updatedStock = stockRepo.save(existingStock);
 	    
 		return updatedStock;
@@ -152,12 +153,13 @@ public class InstitutServiceImpl implements InstitutService{
 		   
 		   stock.setDateExistant(stockOpt.getDateOperation());
 		   stock.setNiveauStock(stock.getNiveauStock() + stockOpt.getQuantity());
-		   stock.setValueStock(stock.getValueStock() + (stockOpt.getAmount() * pdt.getInStockPrice()));
-		   stock.setStatus(StockStatus.CREDIT);
+		   stock.setValueStockCredit(stock.getValueStockCredit() + (stockOpt.getAmount() * pdt.getInStockPrice()));
+		   stock.setValueStockDebit(0);
+		   stock.setLastOperationStatus(StockStatus.CREDIT);
 		   stock.getStockOperations().add(stockOpt);
 		   stockRepo.save(stock);
 		   
-		   pdt.setStockOperation(stockOpt);
+		   pdt.getStockOperation().add(stockOpt);
 		   pdtRepo.save(pdt);
 		   
 	}
@@ -178,8 +180,8 @@ public class InstitutServiceImpl implements InstitutService{
 				if(stock.getNiveauStock() < stockOpt.getQuantity()) throw new InsuffisantQuantityInStock("Quantité insuffisante,veuillez réapprovisionner le stock");	
 				stock.setDateExistant(stockOpt.getDateOperation());
 				stock.setNiveauStock(stock.getNiveauStock() - stockOpt.getQuantity());
-				stock.setValueStock(stock.getValueStock() - (stockOpt.getQuantity() * pdt.getOutStockPrice()));
-				stock.setStatus(StockStatus.DEBIT);
+				stock.setValueStockDebit(0);
+				stock.setLastOperationStatus(StockStatus.DEBIT);
 				stock.getStockOperations().add(stockOpt);
 				stockRepo.save(stock);
 				
@@ -191,10 +193,9 @@ public class InstitutServiceImpl implements InstitutService{
 				stockOpt.setStock(stock);
 				stockOptRepo.save(stockOpt);
 				
-				pdt.setStockOperation(stockOpt);
+				pdt.getStockOperation().remove(stockOpt);
 				pdt.setOutStockPrice(pdt.getOutStockPrice());
 				pdt.setRecordDate(stockOpt.getDateOperation());
-				pdt.setMargin(pdt.getOutStockPrice() - pdt.getInStockPrice());
 				if(stock.getNiveauStock() < 1) {
 					pdt.setStatus(ProductStatus.INSDISPONIBLE);
 				}
@@ -230,7 +231,6 @@ public class InstitutServiceImpl implements InstitutService{
 		// TODO Auto-generated method stub
 		        pdt.setStatus(ProductStatus.DISPONIBLE);
 		        pdt.setOutStockPrice(0);
-		        pdt.setMargin(0);
 		Product savedProduct = pdtRepo.save(pdt);
 		
 		return savedProduct;
@@ -253,7 +253,6 @@ public class InstitutServiceImpl implements InstitutService{
 		        existingProduct.setInStockPrice(pdt.getInStockPrice());
 		        existingProduct.setOutStockPrice(pdt.getOutStockPrice());
 		        existingProduct.setRecordDate(pdt.getRecordDate());
-		        existingProduct.setMargin(pdt.getOutStockPrice()-pdt.getOutStockPrice());
 		Product updatedProduct = pdtRepo.save(existingProduct);
 		
 		return updatedProduct;

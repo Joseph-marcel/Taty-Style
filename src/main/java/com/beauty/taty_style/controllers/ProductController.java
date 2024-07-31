@@ -53,7 +53,6 @@ public class ProductController {
 	}
 	
 	
-	
 	@PutMapping("/products/{pdtId}")
 	public Product updateProduct(@PathVariable Long pdtId,@RequestBody Product pdt) {
 		
@@ -63,6 +62,14 @@ public class ProductController {
 		
 	}
 	
+	
+	@PostMapping("/products/product/setSalePrice/{pdtId}")
+	public Product salePrice(@PathVariable Long pdtId,@RequestBody Product pdt) {
+		
+		Product product = productService.setOutStockPrice(pdt, pdtId);
+		
+		return product;
+	}
 	
 	
 	@DeleteMapping("/products/{pdtId}")

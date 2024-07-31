@@ -3,6 +3,9 @@ package com.beauty.taty_style.models;
 
 import java.util.Date;
 import org.springframework.format.annotation.DateTimeFormat;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -10,7 +13,6 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToOne;
 import jakarta.persistence.Temporal;
 import jakarta.persistence.TemporalType;
 import lombok.AllArgsConstructor;
@@ -24,7 +26,7 @@ import lombok.NoArgsConstructor;
 public  class StockOperation {
 
 	@Id @GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long    number;
+	private Long    operationNumber;
 	@Temporal(TemporalType.DATE)
 	@DateTimeFormat(pattern = "yyyy-MM-dd")
 	private Date    dateOperation;
@@ -33,8 +35,9 @@ public  class StockOperation {
 	@Enumerated(EnumType.STRING)
 	private OperationType type;
 	@ManyToOne
+	@JsonIgnore
 	private Stock   stock;
-	@OneToOne(mappedBy = "stockOperation")
+	@ManyToOne
 	private Product product;
 	
 }

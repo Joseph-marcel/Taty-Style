@@ -2,8 +2,11 @@ package com.beauty.taty_style.models;
 
 
 import java.util.Date;
+import java.util.List;
 
 import org.springframework.format.annotation.DateTimeFormat;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -11,7 +14,7 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.OneToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Temporal;
 import jakarta.persistence.TemporalType;
 import lombok.AllArgsConstructor;
@@ -29,13 +32,13 @@ public class Product {
 	private String designation;
 	private double inStockPrice;
 	private double outStockPrice;
-	private double margin;
 	@Temporal(TemporalType.DATE)
 	@DateTimeFormat(pattern="yyyy-MM-dd")
 	private Date   recordDate;
 	@Enumerated(EnumType.STRING)
 	private ProductStatus status;
-	@OneToOne
-	private StockOperation stockOperation;
+	@OneToMany(mappedBy = "product")
+	@JsonIgnore
+	private List<StockOperation> stockOperation;
 	
 }

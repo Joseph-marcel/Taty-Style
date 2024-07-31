@@ -4,6 +4,7 @@ package com.beauty.taty_style.models;
 import java.util.Date;
 import java.util.List;
 import org.springframework.format.annotation.DateTimeFormat;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -30,9 +31,12 @@ public class Stock {
 	private Date    dateExistant;
 	private double  niveauStock;
 	@Enumerated(EnumType.STRING)
-	private StockStatus  status;
-	@Column(name="value_stock")
-	private double  valueStock;
+	private StockStatus  lastOperationStatus;
+	@Column(name="value_stock_credit")
+	private double  valueStockCredit;
+	@Column(name="value_stock_debit")
+	private double  valueStockDebit;
+	private double stockBenefit;
 	@OneToMany(mappedBy = "stock")
 	private List<StockOperation> stockOperations;
 }
