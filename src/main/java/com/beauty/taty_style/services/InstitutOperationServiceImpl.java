@@ -19,9 +19,11 @@ import lombok.extern.slf4j.Slf4j;
 public class InstitutOperationServiceImpl implements InstitutOperationService{
 	
 	private StockOperationRepository  stockOptRepo;
-	private InstitutProductService  pdtService;
-	private StockRepository             stockRepo;
-	private ProductRepository           pdtRepo;
+	private InstitutProductService    pdtService;
+	private StockRepository           stockRepo;
+	private ProductRepository         pdtRepo;
+	private MarginRepository          marginRepo;
+	
 	
 	
 	@Override
@@ -78,11 +80,22 @@ public class InstitutOperationServiceImpl implements InstitutOperationService{
 						   stock.setNiveauStock(stock.getNiveauStock() - stockOpt.getQuantity());
 						   stock.setValueStockDebit(stock.getValueStockDebit() + (stockOpt.getQuantity() * pdt.getOutStockPrice()));
 						   stock.setLastOperationStatus(StockStatus.DEBIT);
+			               if((stock.getValueStockDebit() - stock.getValueStockCredit()) < 0 ){
+			            	   stock.setStockBenefit((stock.getValueStockDebit() - stock.getValueStockCredit()));
+			            	   log.info("here");
+			               }
 						   stock.getStockOperations().add(stockOpt);
 						stockRepo.save(stock);
 						
+						Margin margin = new Margin();
+						       margin.setAmount(stockOpt.getQuantity() * (pdt.getOutStockPrice() - pdt.getInStockPrice()));
+						       margin.setSaleDate(stockOpt.getDateOperation());
+						       margin.setProduct(pdt);
+						marginRepo.save(margin);
+						
 						   pdt.getStockOperation().add(stockOpt);
 						   pdt.setRecordDate(stockOpt.getDateOperation());
+						   pdt.getMargins().add(margin);
 						if(stock.getNiveauStock() < 1) {
 							pdt.setStatus(ProductStatus.INSDISPONIBLE);
 						}

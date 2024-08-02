@@ -5,6 +5,8 @@ import java.util.List;
 import com.beauty.taty_style.exceptions.ProductNotFoundException;
 import com.beauty.taty_style.models.*;
 
+
+
 public interface InstitutProductService {
 	
 	//PRODUCT
@@ -16,5 +18,8 @@ public interface InstitutProductService {
     Product saveProduct(Product pdt);
     void    deleteProduct(Long pdtId);
     List<Product> products();
+    double marginAmountPerProduct(Long pdtId);
+    Product consultProduct(Long pdtId);
+    double total();
 
 }

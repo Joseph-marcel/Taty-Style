@@ -1,7 +1,9 @@
 package com.beauty.taty_style.controllers;
 
+import java.util.Date;
 import java.util.List;
 
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -77,4 +79,20 @@ public class ProductController {
 		
 		productService.deleteProduct(pdtId);
 	}
+	
+	
+	@GetMapping("/products/benefit/{pdtId}")
+	public Product benefit(@PathVariable Long pdtId) {
+		
+		return productService.consultProduct(pdtId);
+	}
+	
+	
+	@GetMapping("/products/totalBenefit")
+	public double total() {
+		
+		return productService.total();
+	}
+	
+	
 }

@@ -1,5 +1,6 @@
 package com.beauty.taty_style.services;
 
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
@@ -41,6 +42,7 @@ public class InstitutProductServiceImpl implements InstitutProductService{
 	public Product getProductByPdtId(Long pdtId) {
 		// TODO Auto-generated method stub
 		Product existingProduct = pdtRepo.findById(pdtId).orElse(null);
+
 				
 		return existingProduct;
 	}
@@ -73,6 +75,10 @@ public class InstitutProductServiceImpl implements InstitutProductService{
 	public List<Product> products() {
 		// TODO Auto-generated method stub
 		List<Product> products = pdtRepo.findAll();
+		for(Product p : products) {
+			double TotalMargin = marginAmountPerProduct(p.getPdtId());
+			       p.setTotalBenefit(TotalMargin);
+		}
 		
 		return products;
 	}
@@ -111,6 +117,37 @@ public class InstitutProductServiceImpl implements InstitutProductService{
 		        existingPdt.setOutStockPrice(pdt.getOutStockPrice());
 		        
 		return pdtRepo.save(existingPdt);
+	}
+
+
+	@Override
+	public double marginAmountPerProduct(Long pdtId) {
+		// TODO Auto-generated method stub
+	    Product pdt = getProductByPdtId(pdtId);
+	    double  totalMargin = pdt.getMargins().stream().mapToDouble(mrg -> mrg.getAmount()).sum();
+		    
+		return totalMargin;
+	}
+
+
+	@Override
+	public Product consultProduct(Long pdtId) {
+		// TODO Auto-generated method stub
+		double benefit = marginAmountPerProduct(pdtId);
+		Product pdt = getProductByPdtId(pdtId);
+		        pdt.setTotalBenefit(benefit);
+		        
+		return pdt;
+	}
+
+
+	@Override
+	public double total() {
+		// TODO Auto-generated method stub
+		List<Product> products = products();
+		double total = products.stream().mapToDouble(p -> p.getTotalBenefit()).sum();
+		
+		return total;
 	}
 
 }
