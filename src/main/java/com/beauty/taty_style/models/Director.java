@@ -16,7 +16,7 @@ public class Director {
 		    return new CustomerBuilder();
 	    }
 	   
-	   public static Bill.BillBuilder buillBuilder(){
+	   public static Bill.BillBuilder billBuilder(){
 			
 		    return new BillBuilder();
 	    }

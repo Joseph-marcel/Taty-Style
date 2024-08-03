@@ -1,6 +1,5 @@
 package com.beauty.taty_style.services;
 
-import java.util.Date;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
@@ -25,6 +24,7 @@ public class InstitutProductServiceImpl implements InstitutProductService{
 		// TODO Auto-generated method stub
 	  Product existingPdt = getProductByDesignation(pdt.getDesignation());
 	  if(existingPdt==null) {
+		    
 		    pdt.setStatus(ProductStatus.DISPONIBLE);
 	        pdt.setOutStockPrice(0);
 	     Product savedProduct = pdtRepo.save(pdt);

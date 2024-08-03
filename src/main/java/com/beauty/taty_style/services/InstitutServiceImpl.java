@@ -782,7 +782,7 @@ public class InstitutServiceImpl implements InstitutService{
 		// TODO Auto-generated method stub
 		Customer cstm = getCustomerByCustomerId(null);
 		
-		Bill invoice = Director.buillBuilder()
+		Bill invoice = Director.billBuilder()
 				            .billId(UUID.randomUUID().toString())
 				            .cost(bill.getCost())
 				            .deposit(bill.getDeposit())

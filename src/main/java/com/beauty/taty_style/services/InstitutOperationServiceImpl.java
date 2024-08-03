@@ -49,6 +49,9 @@ public class InstitutOperationServiceImpl implements InstitutOperationService{
 		      stock.getStockOperations().add(stockOpt);
 		   stockRepo.save(stock);
 		   
+		      if(stock.getNiveauStock() >= 1) {
+		    	 pdt.setStatus(ProductStatus.DISPONIBLE);
+		      }
 		      pdt.getStockOperation().add(stockOpt);
 		   pdtRepo.save(pdt);
 		   
@@ -75,14 +78,13 @@ public class InstitutOperationServiceImpl implements InstitutOperationService{
 						   stockOpt.setType(OperationType.DEBIT);
 						   stockOpt.setStock(stock);
 						stockOptRepo.save(stockOpt);
-						 
+				
 						stock.setDateExistant(stockOpt.getDateOperation());
 						   stock.setNiveauStock(stock.getNiveauStock() - stockOpt.getQuantity());
 						   stock.setValueStockDebit(stock.getValueStockDebit() + (stockOpt.getQuantity() * pdt.getOutStockPrice()));
 						   stock.setLastOperationStatus(StockStatus.DEBIT);
-			               if((stock.getValueStockDebit() - stock.getValueStockCredit()) < 0 ){
+			               if((stock.getValueStockDebit() - stock.getValueStockCredit()) >= 0 ){
 			            	   stock.setStockBenefit((stock.getValueStockDebit() - stock.getValueStockCredit()));
-			            	   log.info("here");
 			               }
 						   stock.getStockOperations().add(stockOpt);
 						stockRepo.save(stock);

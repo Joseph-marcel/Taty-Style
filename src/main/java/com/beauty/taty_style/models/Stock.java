@@ -3,7 +3,6 @@ package com.beauty.taty_style.models;
 
 import java.util.Date;
 import java.util.List;
-import org.springframework.format.annotation.DateTimeFormat;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -13,7 +12,6 @@ import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Temporal;
 import jakarta.persistence.TemporalType;
-import jakarta.persistence.Transient;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -28,7 +26,6 @@ public class Stock {
 	private String  reference;
 	private String  title;
 	@Temporal(TemporalType.DATE)
-	@DateTimeFormat(pattern = "yyyy-MM-dd")
 	private Date    dateExistant;
 	private double  niveauStock;
 	@Enumerated(EnumType.STRING)

@@ -1,8 +1,7 @@
 package com.beauty.taty_style.models;
 
-import java.util.Date;
 
-import org.springframework.format.annotation.DateTimeFormat;
+import java.util.Date;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -28,10 +27,9 @@ public class Margin {
 	private Long marginId;
 	private double amount;
 	@Temporal(TemporalType.DATE)
-	@DateTimeFormat(pattern="yyyy-MM-dd")
 	private Date   saleDate;
 	@ManyToOne
 	@JsonIgnore
 	private Product product;
-
+	
 }
