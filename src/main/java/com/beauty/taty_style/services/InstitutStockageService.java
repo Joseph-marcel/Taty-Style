@@ -13,6 +13,7 @@ public interface InstitutStockageService {
 	    Stock consult(String ref) throws StockNotFoundException;
 	    void  addProductToStock(String ref,StockOperation stockOpt,Long pdtId);
 	    void  removeProductToStock(String ref,StockOperation stockOpt,Long pdtId);
+	    Stock getStockByTitle(String title);
 	    List<Stock> stocks();
 
 }

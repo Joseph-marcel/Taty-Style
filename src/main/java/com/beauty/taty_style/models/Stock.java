@@ -37,4 +37,6 @@ public class Stock {
 	private double stockBenefit;
 	@OneToMany(mappedBy = "stock")
 	private List<StockOperation> stockOperations;
+	@OneToMany(mappedBy = "stock")
+	private List<Balance> balances; 
 }

@@ -8,6 +8,6 @@ import com.beauty.taty_style.models.Stock;
 
 public interface StockRepository extends JpaRepository<Stock, String>{
 	
-	
+	Stock findByTitle(String title);
 
 }

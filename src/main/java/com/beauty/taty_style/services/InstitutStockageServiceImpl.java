@@ -19,24 +19,33 @@ public class InstitutStockageServiceImpl implements InstitutStockageService{
 	
 	private  StockRepository stockRepo;
     private  InstitutOperationService instOptService;
+    
 	
 	
+    //Create Stock entity
 	@Override
 	public Stock createStock(Stock stock) {
 		// TODO Auto-generated method stub
-		stock.setReference(UUID.randomUUID().toString());
-		stock.setTitle(stock.getTitle());
-		stock.setDateExistant(stock.getDateExistant());
-		stock.setNiveauStock(0);
-		stock.setValueStockCredit(0);
-		stock.setValueStockDebit(0);
-		stock.setLastOperationStatus(StockStatus.EMPTY);
-		Stock savedStock = stockRepo.save(stock);
-		
-		return savedStock;
+		Stock existingStock = getStockByTitle(stock.getTitle());
+		    if(existingStock == null) {
+		    	stock.setReference(UUID.randomUUID().toString());
+				stock.setTitle(stock.getTitle());
+				stock.setDateExistant(stock.getDateExistant());
+				stock.setNiveauStock(0);
+				stock.setValueStockCredit(0);
+				stock.setValueStockDebit(0);
+				stock.setLastOperationStatus(StockStatus.EMPTY);
+				Stock savedStock = stockRepo.save(stock);
+				
+				return savedStock;
+		    }else {
+		    	return existingStock;
+		    }
+			
 	}
 	
 	
+	//Consult Stock
 	@Override
 	public Stock consult(String ref) {
 		// TODO Auto-generated method stub
@@ -47,6 +56,7 @@ public class InstitutStockageServiceImpl implements InstitutStockageService{
 	}
 	
 	
+	//Update Stock
 	@Override
 	public Stock updateStock(String ref, Stock stock) {
 		// TODO Auto-generated method stub
@@ -64,23 +74,39 @@ public class InstitutStockageServiceImpl implements InstitutStockageService{
 	}
 	
 	
+	//Add product to stock
 	@Override
 	public void addProductToStock(String ref, StockOperation stockOpt,Long pdtId) {
 		// TODO Auto-generated method stub
+		
 		instOptService.creditStockOperation(stockOpt, ref, pdtId);
 	}
 
+	
+	//Remove product from stock
 	@Override
 	public void removeProductToStock(String ref, StockOperation stockOpt,Long pdtId) {
 		// TODO Auto-generated method stub
+		
         instOptService.debitStockOperation(stockOpt, ref, pdtId);
 	}
 	
+	
+	//Get all stocks
 	@Override
 	public List<Stock> stocks() {
 		// TODO Auto-generated method stub
 		List<Stock> stocks = stockRepo.findAll();
+		
 		return stocks;
 	}
 
+
+	//Get stock by title
+	@Override
+	public Stock getStockByTitle(String title) {
+		// TODO Auto-generated method stub
+		
+		return stockRepo.findByTitle(title);
+	}
 }

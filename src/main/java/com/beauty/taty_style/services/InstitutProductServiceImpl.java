@@ -11,6 +11,8 @@ import com.beauty.taty_style.repositories.ProductRepository;
 
 import lombok.AllArgsConstructor;
 
+
+
 @Service
 @AllArgsConstructor
 @Transactional
@@ -38,6 +40,7 @@ public class InstitutProductServiceImpl implements InstitutProductService{
 	}
 	
 	
+	//Get product by product Id
 	@Override
 	public Product getProductByPdtId(Long pdtId) {
 		// TODO Auto-generated method stub
@@ -48,6 +51,7 @@ public class InstitutProductServiceImpl implements InstitutProductService{
 	}
 	
 	
+	//Update product
 	@Override
 	public Product updateProduct(Product pdt, Long pdtId) {
 		// TODO Auto-generated method stub
@@ -62,7 +66,7 @@ public class InstitutProductServiceImpl implements InstitutProductService{
 	}
 
 	
-	
+	//Delete product
 	@Override
 	public void deleteProduct(Long pdtId) {
 		// TODO Auto-generated method stub
@@ -70,7 +74,7 @@ public class InstitutProductServiceImpl implements InstitutProductService{
 		        pdtRepo.delete(existingProduct);
 	}
 
-
+    //Set margin attribute for each product
 	@Override
 	public List<Product> products() {
 		// TODO Auto-generated method stub
@@ -84,6 +88,7 @@ public class InstitutProductServiceImpl implements InstitutProductService{
 	}
 
 
+	//Create product
 	@Override
 	public Product saveProduct(Product pdt) {
 		// TODO Auto-generated method stub
@@ -101,6 +106,7 @@ public class InstitutProductServiceImpl implements InstitutProductService{
 	}
 
 
+	//Find product by designation
 	@Override
 	public Product getProductByDesignation(String designation) {
 		// TODO Auto-generated method stub
@@ -110,6 +116,7 @@ public class InstitutProductServiceImpl implements InstitutProductService{
 	}
 
 
+	//Set sale's price for product
 	@Override
 	public Product setOutStockPrice(Product pdt, Long pdtId) {
 		// TODO Auto-generated method stub
@@ -120,6 +127,7 @@ public class InstitutProductServiceImpl implements InstitutProductService{
 	}
 
 
+	//Sum up all margin for a product
 	@Override
 	public double marginAmountPerProduct(Long pdtId) {
 		// TODO Auto-generated method stub
@@ -130,6 +138,7 @@ public class InstitutProductServiceImpl implements InstitutProductService{
 	}
 
 
+	//Set total benefit in product consult action
 	@Override
 	public Product consultProduct(Long pdtId) {
 		// TODO Auto-generated method stub
@@ -140,7 +149,7 @@ public class InstitutProductServiceImpl implements InstitutProductService{
 		return pdt;
 	}
 
-
+   //Sum up margin for list of product
 	@Override
 	public double total() {
 		// TODO Auto-generated method stub
