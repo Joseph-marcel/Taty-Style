@@ -8,5 +8,5 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @DiscriminatorValue("SHAM")
 public class Shampoo extends Allowance{
-
+	
 }

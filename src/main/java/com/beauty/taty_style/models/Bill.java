@@ -13,6 +13,7 @@ import jakarta.persistence.Temporal;
 import jakarta.persistence.TemporalType;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.Builder.Default;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -32,9 +33,11 @@ public class Bill {
 	@DateTimeFormat(pattern = "yyyy-MM-dd")
 	private Date   billDate;
 	@ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-	private Customer customer;
+	@Default
+	private Customer customer = Director.customerBuilder().build();
 	@ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-	private Pack pack;
+	@Default
+	private Pack pack = Director.packBuilder().build();
 	
 	
     public static class BillBuilder{

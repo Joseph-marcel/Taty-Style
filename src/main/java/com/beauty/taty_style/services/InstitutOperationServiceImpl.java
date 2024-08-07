@@ -10,13 +10,11 @@ import com.beauty.taty_style.models.*;
 import com.beauty.taty_style.repositories.*;
 
 import lombok.AllArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 
 
 @Service
 @AllArgsConstructor
 @Transactional
-@Slf4j
 public class InstitutOperationServiceImpl implements InstitutOperationService{
 	
 	private StockOperationRepository  stockOptRepo;

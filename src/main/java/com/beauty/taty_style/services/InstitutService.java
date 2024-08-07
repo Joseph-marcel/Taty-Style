@@ -28,7 +28,7 @@ import com.beauty.taty_style.models.Shampoo;
 import com.beauty.taty_style.models.Stock;
 import com.beauty.taty_style.models.StockOperation;
 import com.beauty.taty_style.models.Straightening;
-import com.beauty.taty_style.models.Wedding;
+import com.beauty.taty_style.models.WeddingHairCut;
 
 
 public interface InstitutService {
@@ -63,8 +63,8 @@ public interface InstitutService {
     
     //CUSTOMER
     Customer createCustomer(Customer cstm);
-    Customer getCustomerByCustomerId(String customerId);
-    Customer updateCustomer(Customer cstm,String customerId);
+    Customer getCustomerByCustomerId(Long customerId);
+    Customer updateCustomer(Customer cstm,Long customerId);
     
     
     
@@ -84,7 +84,7 @@ public interface InstitutService {
     Allowance createScrub(Scrub scrb);
     Allowance createShampoo(Shampoo shp);
     Allowance createStraightening(Straightening straight);
-    Allowance createWedding(Wedding wedding);
+    Allowance createWedding(WeddingHairCut wedding);
     
     
     //ALLOWANCE BY ID
@@ -122,7 +122,7 @@ public interface InstitutService {
     Allowance updateScrub(Scrub scrb,Long number);
     Allowance updateShampoo(Shampoo shp,Long number);
     Allowance updateStraightening(Straightening straight,Long number);
-    Allowance updateWedding(Wedding wedding,Long number);
+    Allowance updateWedding(WeddingHairCut wedding,Long number);
     Allowance getAllowanceByNumber(Long number);
     
     

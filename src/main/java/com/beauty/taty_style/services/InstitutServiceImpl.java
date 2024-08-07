@@ -37,7 +37,7 @@ import com.beauty.taty_style.models.Stock;
 import com.beauty.taty_style.models.StockOperation;
 import com.beauty.taty_style.models.StockStatus;
 import com.beauty.taty_style.models.Straightening;
-import com.beauty.taty_style.models.Wedding;
+import com.beauty.taty_style.models.WeddingHairCut;
 import com.beauty.taty_style.repositories.AllowanceRepository;
 import com.beauty.taty_style.repositories.BillRepository;
 import com.beauty.taty_style.repositories.CustomerRepository;
@@ -282,29 +282,37 @@ public class InstitutServiceImpl implements InstitutService{
 	@Override
 	public Customer createCustomer(Customer cstm) {
 		// TODO Auto-generated method stub
-		cstm.setCustomerId("ts");
-		cstm.setName("Taty Style");
-		Customer savedCstm = cstmRepo.save(cstm);
+		Customer cust = Director.customerBuilder()
+				                .firstName(cstm.getFirstName())
+				                .lastName(cstm.getLastName())
+				                .phoneNumber(cstm.getPhoneNumber())
+				                .district(cstm.getDistrict())
+				                .build();
+		Customer savedCstm = cstmRepo.save(cust);
 		
 		return savedCstm;
 	}
 
+	
 	@Override
-	public Customer getCustomerByCustomerId(String customerId) {
+	public Customer getCustomerByCustomerId(Long customerId) {
 		// TODO Auto-generated method stub
+		
 		return cstmRepo.findById(customerId).orElse(null);
 	}
 
+
 	@Override
-	public Customer updateCustomer(Customer cstm, String customerId) {
+	public Customer updateCustomer(Customer cstm, Long customerId) {
 		// TODO Auto-generated method stub
 		Customer existingCstm = getCustomerByCustomerId(customerId);
-		         existingCstm.setName(cstm.getName());
-		Customer updatedCstm = cstmRepo.save(existingCstm);
+		         existingCstm.setFirstName(cstm.getFirstName());
+		         existingCstm.setLastName(cstm.getLastName());
+		         existingCstm.setPhoneNumber(cstm.getPhoneNumber());
+		         existingCstm.setDistrict(cstm.getDistrict());
 		         
-		return updatedCstm;
+		return cstmRepo.save(existingCstm);
 	}
-
 	
 	
 	
@@ -312,7 +320,11 @@ public class InstitutServiceImpl implements InstitutService{
 	@Override
 	public Allowance createBrushing(Brushing brs) {
 		// TODO Auto-generated method stub
-		Allowance savedBrushing = allowanceRepo.save(brs);
+		
+		Allowance brushing = Director.brushingBuilder()
+				                     .name(brs.getName())
+				                     .build();
+		Allowance savedBrushing = allowanceRepo.save(brushing);
 		
 		return savedBrushing;
 	}
@@ -431,7 +443,7 @@ public class InstitutServiceImpl implements InstitutService{
 	}
 
 	@Override
-	public Allowance createWedding(Wedding wedding) {
+	public Allowance createWedding(WeddingHairCut wedding) {
 		// TODO Auto-generated method stub
 		Allowance savedWedding  = allowanceRepo.save(wedding);
 		
@@ -708,7 +720,7 @@ public class InstitutServiceImpl implements InstitutService{
 	}
 
 	@Override
-	public Allowance updateWedding(Wedding wedding,Long number) {
+	public Allowance updateWedding(WeddingHairCut wedding,Long number) {
 		// TODO Auto-generated method stub
 		Allowance existingWedding = getByWedding(number);
 		          existingWedding.setName(wedding.getName());
