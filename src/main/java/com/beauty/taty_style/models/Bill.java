@@ -81,6 +81,7 @@ public class Bill {
 			  return this; 
 		  }
 		  
+		  
 		  public BillBuilder pack(Pack pack) {
 		  
 			  bill.pack = pack;
@@ -93,8 +94,6 @@ public class Bill {
 			return this.bill;
 		}
 
-		
 	}
-
 	
 }

@@ -9,7 +9,7 @@ import com.beauty.taty_style.models.Dyeing.DyeingBuilder;
 import com.beauty.taty_style.models.GraftInstall.GraftInstallBuilder;
 import com.beauty.taty_style.models.HairBun.HairBunBuilder;
 import com.beauty.taty_style.models.HairRemoval.HairRemovalBuilder;
-import com.beauty.taty_style.models.Haircut.HaircutBuilder;
+import com.beauty.taty_style.models.HairCut.HaircutBuilder;
 import com.beauty.taty_style.models.LayingWicks.LayingWicksBuilder;
 import com.beauty.taty_style.models.MakeUp.MakeUpBuilder;
 import com.beauty.taty_style.models.Manicure.ManicureBuilder;
@@ -74,7 +74,7 @@ public class Director {
 	    }
 	   
 	   
-	   public static Haircut.HaircutBuilder haircutBuilder(){
+	   public static HairCut.HaircutBuilder haircutBuilder(){
 			
 		    return new HaircutBuilder();
 	    }

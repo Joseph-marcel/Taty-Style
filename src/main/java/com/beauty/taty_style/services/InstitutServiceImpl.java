@@ -284,9 +284,7 @@ public class InstitutServiceImpl implements InstitutService{
 		// TODO Auto-generated method stub
 		Customer cust = Director.customerBuilder()
 				                .firstName(cstm.getFirstName())
-				                .lastName(cstm.getLastName())
 				                .phoneNumber(cstm.getPhoneNumber())
-				                .district(cstm.getDistrict())
 				                .build();
 		Customer savedCstm = cstmRepo.save(cust);
 		
@@ -307,9 +305,7 @@ public class InstitutServiceImpl implements InstitutService{
 		// TODO Auto-generated method stub
 		Customer existingCstm = getCustomerByCustomerId(customerId);
 		         existingCstm.setFirstName(cstm.getFirstName());
-		         existingCstm.setLastName(cstm.getLastName());
 		         existingCstm.setPhoneNumber(cstm.getPhoneNumber());
-		         existingCstm.setDistrict(cstm.getDistrict());
 		         
 		return cstmRepo.save(existingCstm);
 	}

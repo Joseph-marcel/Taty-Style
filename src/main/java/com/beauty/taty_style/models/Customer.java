@@ -23,9 +23,7 @@ public class Customer {
 	@Id @GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long customerId;
 	private String firstName;
-	private String lastName;
 	private String phoneNumber;
-	private String district;
 	@OneToMany(mappedBy = "customer")
 	private List<Bill> bills;
 	
@@ -47,13 +45,6 @@ public class Customer {
 			return this;
 		}
 		
-        
-        public CustomerBuilder lastName(String lastName) {
-			
-			customer.lastName = lastName;
-			return this;
-		}
-
 
         public CustomerBuilder phoneNumber(String phoneNumber) {
 	
@@ -61,12 +52,6 @@ public class Customer {
 	        return this;
         }
         
-        
-        public CustomerBuilder district(String district) {
-        	
-	        customer.district = district;
-	        return this;
-        }
 		
 		public CustomerBuilder bills() {
 			

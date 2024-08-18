@@ -8,10 +8,10 @@ import lombok.NoArgsConstructor;
 @Entity
 @NoArgsConstructor
 @DiscriminatorValue("HAIR")
-public class Haircut extends Allowance{
+public class HairCut extends Allowance{
 	public static class HaircutBuilder{
 		
-		private Haircut hairCut = new Haircut();
+		private HairCut hairCut = new HairCut();
 		
 		
 		public HaircutBuilder number(Long number) {
@@ -34,7 +34,7 @@ public class Haircut extends Allowance{
 		}
 		
 		
-		public Haircut build() {
+		public HairCut build() {
 			
 			return this.hairCut;
 		}
