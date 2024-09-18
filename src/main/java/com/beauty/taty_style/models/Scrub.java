@@ -26,14 +26,13 @@ public class Scrub extends Allowance{
 			return this;
 		}
         
-        
-        public ScrubBuilder pack(Pack pack) {
+        public ScrubBuilder price(double price) {
 			
-        	scrub.setPack(pack);
+        	scrub.setPrice(price);
 			return this;
 		}
-		
-		
+        
+        
 		public Scrub build() {
 			
 			return this.scrub;

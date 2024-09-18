@@ -35,6 +35,11 @@ public class Dyeing extends Allowance{
 				return this;
 			}
 	        
+            public DyeingBuilder price(double price) {
+				
+				dyeing.setPrice(price);
+				return this;
+			}
 	        
             public DyeingBuilder color(Color color) {
 				
@@ -42,14 +47,7 @@ public class Dyeing extends Allowance{
 				return this;
 			}
 	        
-	        
-	        public DyeingBuilder pack(Pack pack) {
-				
-	        	dyeing.setPack(pack);
-				return this;
-			}
-			
-			
+	      
 			public Dyeing build() {
 				
 				return this.dyeing;

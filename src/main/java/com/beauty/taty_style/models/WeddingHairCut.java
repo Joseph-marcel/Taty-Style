@@ -26,14 +26,13 @@ public class WeddingHairCut extends Allowance{
 			return this;
 		}
         
-        
-        public WeddingHairCutBuilder pack(Pack pack) {
+        public WeddingHairCutBuilder price(double price) {
 			
-        	wedding.setPack(pack);
+        	wedding.setPrice(price);
 			return this;
 		}
-		
-		
+        
+        
 		public WeddingHairCut build() {
 			
 			return this.wedding;

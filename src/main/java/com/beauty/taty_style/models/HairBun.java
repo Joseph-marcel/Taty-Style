@@ -27,13 +27,12 @@ public class HairBun extends Allowance{
 			return this;
 		}
         
-        
-        public HairBunBuilder pack(Pack pack) {
+        public HairBunBuilder price(double price) {
 			
-        	hairBun.setPack(pack);
+			hairBun.setPrice(price);
 			return this;
 		}
-		
+        
 		
 		public HairBun build() {
 			

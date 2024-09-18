@@ -1,6 +1,7 @@
 package com.beauty.taty_style.models;
 
 
+
 import jakarta.persistence.DiscriminatorValue;
 import jakarta.persistence.Entity;
 import lombok.NoArgsConstructor;
@@ -9,30 +10,29 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @DiscriminatorValue("HAIR")
 public class HairCut extends Allowance{
-	public static class HaircutBuilder{
+	public static class HairCutBuilder{
 		
 		private HairCut hairCut = new HairCut();
 		
 		
-		public HaircutBuilder number(Long number) {
+		public HairCutBuilder number(Long number) {
 			
 			hairCut.setNumber(number);
 			return this;
 		}
 		
-        public HaircutBuilder name(String name) {
+        public HairCutBuilder name(String name) {
 			
         	hairCut.setName(name);
 			return this;
 		}
         
-        
-        public HaircutBuilder pack(Pack pack) {
+		
+        public HairCutBuilder price(double price) {
 			
-        	hairCut.setPack(pack);
+			hairCut.setPrice(price);
 			return this;
 		}
-		
 		
 		public HairCut build() {
 			

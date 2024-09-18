@@ -26,13 +26,11 @@ public class Brushing extends Allowance{
 				return this;
 			}
 	        
-	        
-	        public BrushingBuilder pack(Pack pack) {
+            public BrushingBuilder price(double price) {
 				
-				brushing.setPack(pack);
+				brushing.setPrice(price);
 				return this;
 			}
-			
 			
 			public Brushing build() {
 				

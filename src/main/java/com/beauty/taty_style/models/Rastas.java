@@ -35,14 +35,24 @@ public class Rastas extends Allowance{
 			return this;
 		}
         
-        
-        public RastasBuilder pack(Pack pack) {
+        public RastasBuilder fashion(FashionStyle fashion) {
 			
-        	rastas.setPack(pack);
+           	rastas.setFashion(fashion);
+    			return this;
+    	}
+        
+        public RastasBuilder size(Size size) {
+			
+           	rastas.setSize(size);
+    			return this;
+    	}
+        
+       public RastasBuilder price(double price) {
+			
+        	rastas.setPrice(price);
 			return this;
 		}
-		
-		
+        
 		public Rastas build() {
 			
 			return this.rastas;

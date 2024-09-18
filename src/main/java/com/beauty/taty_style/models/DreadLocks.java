@@ -1,6 +1,7 @@
 package com.beauty.taty_style.models;
 
 
+
 import jakarta.persistence.DiscriminatorValue;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -15,7 +16,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Data
 @EqualsAndHashCode(callSuper=false)
-@DiscriminatorValue("DREAD")
+@DiscriminatorValue("LOCK")
 public class DreadLocks extends Allowance{
 	
 	   @Enumerated(EnumType.STRING)
@@ -36,23 +37,20 @@ public class DreadLocks extends Allowance{
 				
 	        	dreadL.setName(name);
 				return this;
+			} 
+	        
+            public DreadLocksBuilder price(double price) {
+				
+				dreadL.setPrice(price);
+				return this;
 			}
-	        
-	        
+
 	        public DreadLocksBuilder size(Size size) {
 				
 	        	dreadL.setSize(size);
 				return this;
 			}
 	        
-	        
-            public DreadLocksBuilder pack(Pack pack) {
-				
-            	dreadL.setPack(pack);
-				return this;
-			}
-			
-			
 			public DreadLocks build() {
 				
 				return this.dreadL;

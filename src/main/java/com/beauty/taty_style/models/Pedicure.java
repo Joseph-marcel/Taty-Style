@@ -24,14 +24,13 @@ public class Pedicure extends Allowance{
 			return this;
 		}
         
-        
-        public PedicureBuilder pack(Pack pack) {
+        public PedicureBuilder price(double price) {
 			
-        	pedicure.setPack(pack);
+        	pedicure.setPrice(price);
 			return this;
 		}
-		
-		
+        
+        
 		public Pedicure build() {
 			
 			return this.pedicure;

@@ -1,7 +1,10 @@
 package com.beauty.taty_style.models;
 
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
+
 import org.springframework.format.annotation.DateTimeFormat;
 
 import jakarta.persistence.CascadeType;
@@ -9,6 +12,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Temporal;
 import jakarta.persistence.TemporalType;
 import lombok.AllArgsConstructor;
@@ -34,10 +38,10 @@ public class Bill {
 	private Date   billDate;
 	@ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
 	@Default
-	private Customer customer = Director.customerBuilder().build();
-	@ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+	private Customer customer = new Customer();
+	@OneToMany(mappedBy = "bill",fetch = FetchType.EAGER)
 	@Default
-	private Pack pack = Director.packBuilder().build();
+	private List<Allowance> allowances = new ArrayList<Allowance>();
 	
 	
     public static class BillBuilder{
@@ -74,17 +78,17 @@ public class Bill {
 			return this;
 		}
 		
-		
-		  public BillBuilder customer(Customer customer) {
+        
+        public BillBuilder  allowances(List<Allowance> allowances) {
+			
+			bill.allowances =  allowances;
+			return this;
+		}
+
+
+		public BillBuilder customer(Customer customer) {
 		  
 			  bill.customer = customer; 
-			  return this; 
-		  }
-		  
-		  
-		  public BillBuilder pack(Pack pack) {
-		  
-			  bill.pack = pack;
 			  return this; 
 		  }
 		 

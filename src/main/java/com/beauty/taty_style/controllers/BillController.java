@@ -1,6 +1,6 @@
 package com.beauty.taty_style.controllers;
 
-
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -8,25 +8,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.beauty.taty_style.models.Allowance;
-import com.beauty.taty_style.models.Brushing;
-import com.beauty.taty_style.models.Closure;
-import com.beauty.taty_style.models.DreadLocks;
-import com.beauty.taty_style.models.Dyeing;
-import com.beauty.taty_style.models.GraftInstall;
-import com.beauty.taty_style.models.HairBun;
-import com.beauty.taty_style.models.HairCut;
-import com.beauty.taty_style.models.HairRemoval;
-import com.beauty.taty_style.models.LayingWicks;
-import com.beauty.taty_style.models.MakeUp;
-import com.beauty.taty_style.models.Manicure;
-import com.beauty.taty_style.models.Pack;
-import com.beauty.taty_style.models.Pedicure;
-import com.beauty.taty_style.models.Rastas;
-import com.beauty.taty_style.models.Scrub;
-import com.beauty.taty_style.models.Shampoo;
-import com.beauty.taty_style.models.Straightening;
-import com.beauty.taty_style.models.WeddingHairCut;
-import com.beauty.taty_style.services.InstitutPackservice;
+import com.beauty.taty_style.models.Bill;
+import com.beauty.taty_style.services.InstitutBillService;
 
 import lombok.AllArgsConstructor;
 
@@ -34,124 +17,42 @@ import lombok.AllArgsConstructor;
 @AllArgsConstructor
 public class BillController {
 
-	private InstitutPackservice packService;
+	private InstitutBillService billService;
 	
 	
-	@PostMapping("/pack")
-	public Pack createPack(@RequestBody Pack pack) {
+	
+	@PostMapping("/billing/allowance/create")
+	public Allowance createAllowance(@RequestBody Allowance allowance) {
 		
-		return packService.createPack(pack);
-	}
-	
-	@PostMapping("/allowances/brushing")
-	public Allowance createBrushing(@RequestBody Brushing brs) {
 		
-		return packService.createAllowance(brs);
+		return billService.saveAllowance(allowance);
 	}
 	
-	@PostMapping("/allowances/closure")
-	public Allowance createClosure(@RequestBody Closure cls) {
+	
+	@PostMapping("/billing/bill/create")
+	public Bill createBill(@RequestBody Bill bill) {
 		
-		return packService.createAllowance(cls);
-	}
-	
-	@PostMapping("/allowances/dreadLocks")
-	public Allowance createDreadLocks(@RequestBody DreadLocks dread) {
 		
-		return packService.createAllowance(dread);
+		return billService.createBill(bill);
 	}
 	
-	@PostMapping("/allowances/dyeing")
-	public Allowance createDyeing(@RequestBody Dyeing die) {
+	
+	@GetMapping("/billing/bill/{billId}")
+	public Bill getBill(@PathVariable String billId) {
 		
-		return packService.createAllowance(die);
-	}
-	
-	@PostMapping("/allowances/graftInstall")
-	public Allowance createGraftInstall(@RequestBody GraftInstall graft) {
 		
-		return packService.createAllowance(graft);
+		return billService.getBillByBillId(billId);
 	}
 	
-	@PostMapping("/allowances/hairBun")
-	public Allowance createHairBun(@RequestBody HairBun hairBun) {
+	
+	@PutMapping("billing/bill/{billId}")
+	public Bill updateBill(@PathVariable String billId,@RequestBody Bill bill) {
 		
-		return packService.createAllowance(hairBun);
+		return billService.updateBill(billId, bill);
 	}
 	
-	@PostMapping("/allowances/hairCut")
-	public Allowance createHairCut(@RequestBody HairCut hairCut) {
-		
-		return packService.createAllowance(hairCut);
-	}
 	
-	@PostMapping("/allowances/hairRemoval")
-	public Allowance createHairRemoval(@RequestBody HairRemoval hairR) {
-		
-		return packService.createAllowance(hairR);
-	}
 	
-	@PostMapping("/allowances/layingWicks")
-	public Allowance createLayingWicks(@RequestBody LayingWicks layW) {
-		
-		return packService.createAllowance(layW);
-	}
 	
-	@PostMapping("/allowances/makeUp")
-	public Allowance createMakeUp(@RequestBody MakeUp makeUp) {
-		
-		return packService.createAllowance(makeUp);
-	}
 	
-	@PostMapping("/allowances/manicure")
-	public Allowance createManicure(@RequestBody Manicure manicure) {
-		
-		return packService.createAllowance(manicure);
-	}
-	
-	@PostMapping("/allowances/pedicure")
-	public Allowance createPedicure(@RequestBody Pedicure pedicure) {
-		
-		return packService.createAllowance(pedicure);
-	}
-	
-	@PostMapping("/allowances/rastas")
-	public Allowance createRastas(@RequestBody Rastas rastas) {
-		
-		return packService.createAllowance(rastas);
-	}
-	
-	@PostMapping("/allowances/scrub")
-	public Allowance createScrub(@RequestBody Scrub scrub) {
-		
-		return packService.createAllowance(scrub);
-	}
-	
-	@PostMapping("/allowances/shampoo")
-	public Allowance createShampoo(@RequestBody Shampoo shampoo) {
-		
-		return packService.createAllowance(shampoo);
-	}
-	
-	@PostMapping("/allowances/straightening")
-	public Allowance createStraightening(@RequestBody Straightening straightening) {
-		
-		return packService.createAllowance(straightening);
-	}
-	
-	@PostMapping("/allowances/weddingHaircut")
-	public Allowance createWeddingHairCut(@RequestBody WeddingHairCut weddingHairCut) {
-		
-		return packService.createAllowance(weddingHairCut);
-	}
-	
-	@PutMapping("/pack/add/{packId}/{name}")
-	public void addAllowanceToPack(@PathVariable Long packId,@PathVariable String name) {
-		packService.addAllowanceInPack(packId, name);
-	}
-	
-	@PutMapping("/pack/remove/{packId}/{name}")
-	public void RemoveAllowanceFromPack(@PathVariable Long packId,@PathVariable String name) {
-		packService.removeAllowanceInPack(packId, name);
-	}
 }

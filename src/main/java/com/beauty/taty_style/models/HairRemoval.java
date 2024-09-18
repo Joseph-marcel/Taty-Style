@@ -26,14 +26,13 @@ public class HairRemoval extends Allowance{
 			return this;
 		}
         
-        
-        public HairRemovalBuilder pack(Pack pack) {
+        public HairRemovalBuilder price(double price) {
 			
-        	hairRemoval.setPack(pack);
+			hairRemoval.setPrice(price);
 			return this;
 		}
-		
-		
+        
+        
 		public HairRemoval build() {
 			
 			return this.hairRemoval;

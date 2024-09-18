@@ -8,22 +8,19 @@ import com.beauty.taty_style.models.DreadLocks.DreadLocksBuilder;
 import com.beauty.taty_style.models.Dyeing.DyeingBuilder;
 import com.beauty.taty_style.models.GraftInstall.GraftInstallBuilder;
 import com.beauty.taty_style.models.HairBun.HairBunBuilder;
+import com.beauty.taty_style.models.HairCut.HairCutBuilder;
 import com.beauty.taty_style.models.HairRemoval.HairRemovalBuilder;
-import com.beauty.taty_style.models.HairCut.HaircutBuilder;
 import com.beauty.taty_style.models.LayingWicks.LayingWicksBuilder;
 import com.beauty.taty_style.models.MakeUp.MakeUpBuilder;
 import com.beauty.taty_style.models.Manicure.ManicureBuilder;
-import com.beauty.taty_style.models.Pack.PackBuilder;
 import com.beauty.taty_style.models.Pedicure.PedicureBuilder;
 import com.beauty.taty_style.models.Rastas.RastasBuilder;
+import com.beauty.taty_style.models.Scrub.ScrubBuilder;
+import com.beauty.taty_style.models.Shampoo.ShampooBuilder;
+import com.beauty.taty_style.models.Straightening.StraighteningBuilder;
 import com.beauty.taty_style.models.WeddingHairCut.WeddingHairCutBuilder;
 
 public class Director {
-	
-	   public static Pack.PackBuilder packBuilder(){
-		
-		    return new PackBuilder();
-	    }
 	   
 	   
 	   public static Customer.CustomerBuilder customerBuilder(){
@@ -31,60 +28,50 @@ public class Director {
 		    return new CustomerBuilder();
 	    }
 	   
-	   
 	   public static Bill.BillBuilder billBuilder(){
 			
 		    return new BillBuilder();
 	    }
-	   
 	   
 	   public static Brushing.BrushingBuilder brushingBuilder(){
 			
 		    return new BrushingBuilder();
 	    }
 	   
-	   
 	   public static Closure.ClosureBuilder closureBuilder(){
 			
 		    return new ClosureBuilder();
 	    }
-	   
 	   
 	   public static DreadLocks.DreadLocksBuilder dreadLocksBuilder(){
 			
 		    return new DreadLocksBuilder();
 	    }
 	   
-	   
 	   public static Dyeing.DyeingBuilder dyeingBuilder(){
 			
 		    return new DyeingBuilder();
 	    }
-	   
 	   
 	   public static HairBun.HairBunBuilder hairBunBuilder(){
 			
 		    return new HairBunBuilder();
 	    }
 	   
-	   
 	   public static GraftInstall.GraftInstallBuilder graftInstallBuilder(){
 			
 		    return new GraftInstallBuilder();
 	    }
 	   
-	   
-	   public static HairCut.HaircutBuilder haircutBuilder(){
+	   public static HairCut.HairCutBuilder haircutBuilder(){
 			
-		    return new HaircutBuilder();
+		    return new HairCutBuilder();
 	    }
-	   
 	   
 	   public static HairRemoval.HairRemovalBuilder hairRemovalBuilder(){
 			
 		    return new HairRemovalBuilder();
 	    }
-	   
 	   
 	   public static LayingWicks.LayingWicksBuilder layingWicksBuilder(){
 			
@@ -95,7 +82,6 @@ public class Director {
 			
 		    return new  MakeUpBuilder();
 	    }
-	   
 	   
 	   public static  Manicure.ManicureBuilder  manicureBuilder(){
 			
@@ -112,16 +98,23 @@ public class Director {
 		    return new  RastasBuilder();
 	    }
 	   
-	   
 	   public static  WeddingHairCut.WeddingHairCutBuilder  weddingHairCutBuilder(){
 			
 		    return new  WeddingHairCutBuilder();
-	    }
+	    }  
 	   
+	   public static  Scrub.ScrubBuilder  scrubBuilder(){
+			
+		    return new  ScrubBuilder();
+	    }  
 	   
+	   public static  Straightening.StraighteningBuilder  straighteningBuilder(){
+			
+		    return new  StraighteningBuilder();
+	    } 
 	   
-	   
-	   
-	   
-	   
+	   public static  Shampoo.ShampooBuilder  shampooBuilder(){
+			
+		    return new  ShampooBuilder();
+	    } 
 }

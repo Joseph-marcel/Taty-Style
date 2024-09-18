@@ -27,14 +27,12 @@ public class Closure extends Allowance{
 				return this;
 			}
 	        
-	        
-	        public ClosureBuilder pack(Pack pack) {
+            public ClosureBuilder price(double price) {
 				
-	        	closure.setPack(pack);
+				closure.setPrice(price);
 				return this;
 			}
-			
-			
+	        
 			public Closure build() {
 				
 				return this.closure;

@@ -2,7 +2,6 @@ package com.beauty.taty_style.services;
 
 import java.util.List;
 
-import com.beauty.taty_style.exceptions.ImpossibleAddingAllowanceTwiceInPack;
 import com.beauty.taty_style.exceptions.ProductNotFoundException;
 import com.beauty.taty_style.exceptions.StockNotFoundException;
 import com.beauty.taty_style.exceptions.StockOperationNotFoundException;
@@ -19,7 +18,6 @@ import com.beauty.taty_style.models.HairRemoval;
 import com.beauty.taty_style.models.LayingWicks;
 import com.beauty.taty_style.models.MakeUp;
 import com.beauty.taty_style.models.Manicure;
-import com.beauty.taty_style.models.Pack;
 import com.beauty.taty_style.models.Pedicure;
 import com.beauty.taty_style.models.Product;
 import com.beauty.taty_style.models.Rastas;
@@ -124,17 +122,6 @@ public interface InstitutService {
     Allowance updateStraightening(Straightening straight,Long number);
     Allowance updateWedding(WeddingHairCut wedding,Long number);
     Allowance getAllowanceByNumber(Long number);
-    
-    
-    
-    
-    
-    //PACK
-    Pack createPack(Pack pack);
-    Pack getByPackId(Long pckId);
-    Pack updatePack(Long pckId,Pack pck);
-    void addAllowanceToPack(Long number,Long pckId) throws ImpossibleAddingAllowanceTwiceInPack;
-    void removeAllowanceToPack(Long number,Long pckId);
     
     
     

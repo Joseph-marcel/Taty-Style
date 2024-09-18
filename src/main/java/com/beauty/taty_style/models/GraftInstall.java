@@ -27,13 +27,11 @@ public class GraftInstall extends Allowance{
 			return this;
 		}
         
-        
-        public GraftInstallBuilder pack(Pack pack) {
+        public GraftInstallBuilder price(double price) {
 			
-        	graftInstall.setPack(pack);
+			graftInstall.setPrice(price);
 			return this;
 		}
-		
 		
 		public GraftInstall build() {
 			

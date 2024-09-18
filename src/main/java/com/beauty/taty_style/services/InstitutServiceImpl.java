@@ -6,7 +6,7 @@ import java.util.UUID;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.beauty.taty_style.exceptions.ImpossibleAddingAllowanceTwiceInPack;
+
 import com.beauty.taty_style.exceptions.InsuffisantQuantityInStock;
 import com.beauty.taty_style.exceptions.ProductNotFoundException;
 import com.beauty.taty_style.exceptions.StockNotFoundException;
@@ -26,7 +26,6 @@ import com.beauty.taty_style.models.LayingWicks;
 import com.beauty.taty_style.models.MakeUp;
 import com.beauty.taty_style.models.Manicure;
 import com.beauty.taty_style.models.OperationType;
-import com.beauty.taty_style.models.Pack;
 import com.beauty.taty_style.models.Pedicure;
 import com.beauty.taty_style.models.Product;
 import com.beauty.taty_style.models.ProductStatus;
@@ -41,7 +40,6 @@ import com.beauty.taty_style.models.WeddingHairCut;
 import com.beauty.taty_style.repositories.AllowanceRepository;
 import com.beauty.taty_style.repositories.BillRepository;
 import com.beauty.taty_style.repositories.CustomerRepository;
-import com.beauty.taty_style.repositories.PackRepository;
 import com.beauty.taty_style.repositories.ProductRepository;
 import com.beauty.taty_style.repositories.StockOperationRepository;
 import com.beauty.taty_style.repositories.StockRepository;
@@ -61,7 +59,6 @@ public class InstitutServiceImpl implements InstitutService{
 	private StockOperationRepository  stockOptRepo;
 	private CustomerRepository    cstmRepo;
 	private AllowanceRepository  allowanceRepo;
-	private PackRepository       packRepo;
 	private BillRepository       billRepo;
 	
 	
@@ -734,56 +731,6 @@ public class InstitutServiceImpl implements InstitutService{
 	
 	
 
-	
-	
-	//PACK METHOD
-	@Override
-	public Pack createPack(Pack pack) {
-		// TODO Auto-generated method stub
-		Pack pck = Director.packBuilder()
-				            .allowances()
-				            .bills()
-				            .build();
-		
-		return packRepo.save(pck);
-	}
-
-	@Override
-	public Pack getByPackId(Long pckId) {
-		// TODO Auto-generated method stub
-		return packRepo.findById(pckId).orElse(null);
-	}
-
-	@Override
-	public Pack updatePack(Long pckId, Pack pck) {
-		// TODO Auto-generated method stub
-		
-		return null;
-	}
-
-	@Override
-	public void addAllowanceToPack(Long number, Long pckId) {
-		// TODO Auto-generated method stub
-		Pack pack = getByPackId(pckId);
-		Allowance allowance = getAllowanceByNumber(number);
-		List<Allowance> allowances = pack.getAllowances();
-		for(Allowance all:allowances) {
-			if(all.getName() == allowance.getName()) throw new ImpossibleAddingAllowanceTwiceInPack("Vous ne pouvez ajouter cette prestation une seconde fois");
-			  pack.getAllowances().add(allowance);
-		}
-	}
-
-	@Override
-	public void removeAllowanceToPack(Long number, Long pckId) {
-		// TODO Auto-generated method stub
-		Pack pack = getByPackId(pckId);
-		Allowance allowance = getAllowanceByNumber(number);
-		pack.getAllowances().remove(allowance);
-	}
-
-	
-	
-	
 	//METHOD BILL
 	@Override
 	public Bill createBill(Bill bill) {
@@ -796,7 +743,7 @@ public class InstitutServiceImpl implements InstitutService{
 				            .deposit(bill.getDeposit())
 				            .refund(bill.getDeposit() - bill.getCost())
 				            .billDate(bill.getBillDate())
-				            .pack(bill.getPack())
+				            .allowances(null)
 				            .customer(cstm)
 				            .build();
 		Bill savedInvoice = billRepo.save(invoice);
@@ -822,5 +769,4 @@ public class InstitutServiceImpl implements InstitutService{
 		return billRepo.findAll();
 	}
 
-	
 }

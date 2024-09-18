@@ -24,14 +24,13 @@ public class MakeUp extends Allowance{
 			return this;
 		}
         
-        
-        public MakeUpBuilder pack(Pack pack) {
+        public MakeUpBuilder price(double price) {
 			
-        	makeUp.setPack(pack);
+        	makeUp.setPrice(price);
 			return this;
 		}
-		
-		
+        
+        
 		public MakeUp build() {
 			
 			return this.makeUp;

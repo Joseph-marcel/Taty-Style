@@ -24,14 +24,13 @@ public class Manicure extends Allowance{
 			return this;
 		}
         
-        
-        public ManicureBuilder pack(Pack pack) {
+        public ManicureBuilder price(double price) {
 			
-        	manicure.setPack(pack);
+        	manicure.setPrice(price);
 			return this;
 		}
-		
-		
+        
+        
 		public Manicure build() {
 			
 			return this.manicure;

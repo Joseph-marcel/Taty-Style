@@ -26,14 +26,13 @@ public class LayingWicks extends Allowance{
 			return this;
 		}
         
-        
-        public LayingWicksBuilder pack(Pack pack) {
+        public LayingWicksBuilder price(double price) {
 			
-        	layingWicks.setPack(pack);
+        	layingWicks.setPrice(price);
 			return this;
 		}
-		
-		
+        
+        
 		public LayingWicks build() {
 			
 			return this.layingWicks;

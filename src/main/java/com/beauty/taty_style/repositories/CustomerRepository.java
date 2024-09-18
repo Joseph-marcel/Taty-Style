@@ -6,4 +6,5 @@ import com.beauty.taty_style.models.Customer;
 
 public interface CustomerRepository extends JpaRepository<Customer, Long>{
 
+	Customer findByPhoneNumber(String phoneNumber);
 }
