@@ -6,14 +6,16 @@ import java.util.UUID;
 
 import org.springframework.stereotype.Service;
 
+import com.beauty.taty_style.exceptions.InsuffissantDepositException;
 import com.beauty.taty_style.models.Allowance;
 import com.beauty.taty_style.models.Bill;
 import com.beauty.taty_style.models.Customer;
 import com.beauty.taty_style.models.Director;
+import com.beauty.taty_style.models.Pack;
 import com.beauty.taty_style.repositories.AllowanceRepository;
 import com.beauty.taty_style.repositories.BillRepository;
 import com.beauty.taty_style.repositories.CustomerRepository;
-
+import com.beauty.taty_style.repositories.PackRepository;
 
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
@@ -27,6 +29,7 @@ public class InstitutBillServiceImpl implements InstitutBillService{
 	private AllowanceRepository allowanceRepo;
 	private CustomerRepository  custRepo;
 	private BillRepository      billRepo;
+	private PackRepository      packRepo;
 	
 	
 	
@@ -118,6 +121,10 @@ public class InstitutBillServiceImpl implements InstitutBillService{
 	public Bill createBill(Bill bill) {
 		// TODO Auto-generated method stub
 		Customer cstm = createCustomer(bill.getCustomer());
+		Pack pack = createPack(bill.getPack());
+		     getAllowances().forEach(all -> pack.getAllowances().add(all));
+		     getAllowances().forEach(all -> all.getPacks().add(pack));
+		     if((bill.getDeposit() - cost()) < 0) throw new InsuffissantDepositException("Somme inférieur au montant total des prestations");
 		
 		         bill = Director.billBuilder()
 		        		        .billId(UUID.randomUUID().toString())
@@ -125,12 +132,12 @@ public class InstitutBillServiceImpl implements InstitutBillService{
 		        		        .cost(cost())
 		        		        .deposit(bill.getDeposit())
 		        		        .refund(bill.getDeposit() - cost())
-		        		        .allowances(getAllowances())
+		        		        .pack(pack)
 		        		        .customer(cstm)
 		        		        .build();	
 		         Bill savedBill = billRepo.save(bill);
-		         getAllowances().forEach(allowance -> allowance.setBill(savedBill));
-		 
+		         
+		         
 		return savedBill;
 	}
 	
@@ -167,6 +174,14 @@ public class InstitutBillServiceImpl implements InstitutBillService{
 		// TODO Auto-generated method stubs
 		     
 		return getAllowances().stream().mapToDouble(all -> all.getPrice()).sum();
+	}
+
+	
+	@Override
+	public Pack createPack(Pack pack) {
+		// TODO Auto-generated method stub
+		
+		return packRepo.save(pack);
 	}
 
 }

@@ -36,6 +36,7 @@ public  class StockOperation {
 	@JsonIgnore
 	private Stock   stock;
 	@ManyToOne
+	@JsonIgnore
 	private Product product;
 	
 }

@@ -1,18 +1,24 @@
 package com.beauty.taty_style.dtos;
 
-import lombok.AllArgsConstructor;
+import java.util.Date;
+import java.util.List;
+
+import com.beauty.taty_style.models.ProductStatus;
+
 import lombok.Data;
-import lombok.NoArgsConstructor;
+
 
 @Data
-@NoArgsConstructor
-@AllArgsConstructor
 public class ProductDto {
 	
 	private String code;
 	private String designation;
-	private double buyingPrice;
-	private double salingPrice;
+	private double inStockPrice;
+	private double outStockPrice;
+	private Date   recordDate;
+	private ProductStatus status;
+	private double totalBenefit;
 	private double margin;
+	private List<MarginDto> marginsDto;
 
 }

@@ -1,5 +1,7 @@
 package com.beauty.taty_style.controllers;
 
+import java.util.List;
+
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -7,6 +9,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.beauty.taty_style.exceptions.InsuffissantDepositException;
 import com.beauty.taty_style.models.Allowance;
 import com.beauty.taty_style.models.Bill;
 import com.beauty.taty_style.services.InstitutBillService;
@@ -30,7 +33,7 @@ public class BillController {
 	
 	
 	@PostMapping("/billing/bill/create")
-	public Bill createBill(@RequestBody Bill bill) {
+	public Bill createBill(@RequestBody Bill bill) throws InsuffissantDepositException{
 		
 		
 		return billService.createBill(bill);
@@ -52,7 +55,10 @@ public class BillController {
 	}
 	
 	
-	
-	
+	@GetMapping("/billing/bills")
+	public List<Bill> getAllBills(){
+		
+		return billService.getAllBills();
+	}
 	
 }

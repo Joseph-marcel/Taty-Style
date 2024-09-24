@@ -736,6 +736,7 @@ public class InstitutServiceImpl implements InstitutService{
 	public Bill createBill(Bill bill) {
 		// TODO Auto-generated method stub
 		Customer cstm = getCustomerByCustomerId(null);
+	
 		
 		Bill invoice = Director.billBuilder()
 				            .billId(UUID.randomUUID().toString())
@@ -743,7 +744,7 @@ public class InstitutServiceImpl implements InstitutService{
 				            .deposit(bill.getDeposit())
 				            .refund(bill.getDeposit() - bill.getCost())
 				            .billDate(bill.getBillDate())
-				            .allowances(null)
+				            .pack(null)
 				            .customer(cstm)
 				            .build();
 		Bill savedInvoice = billRepo.save(invoice);

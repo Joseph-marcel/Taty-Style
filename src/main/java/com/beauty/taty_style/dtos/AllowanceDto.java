@@ -1,15 +1,19 @@
 package com.beauty.taty_style.dtos;
 
-import lombok.AllArgsConstructor;
+import com.beauty.taty_style.models.Color;
+import com.beauty.taty_style.models.FashionStyle;
+import com.beauty.taty_style.models.Size;
+
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
 @Data
-@NoArgsConstructor
-@AllArgsConstructor
 public class AllowanceDto {
 	
 	private Long number;
 	private String name;
-
+	private double price;
+	private Size size;
+	private FashionStyle fashion;
+	private Color color;
+    
 }
