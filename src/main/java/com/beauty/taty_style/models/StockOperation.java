@@ -3,8 +3,6 @@ package com.beauty.taty_style.models;
 
 import java.util.Date;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -33,10 +31,8 @@ public  class StockOperation {
 	@Enumerated(EnumType.STRING)
 	private OperationType type;
 	@ManyToOne
-	@JsonIgnore
 	private Stock   stock;
 	@ManyToOne
-	@JsonIgnore
 	private Product product;
 	
 }

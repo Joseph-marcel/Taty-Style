@@ -8,13 +8,13 @@ import lombok.Data;
 @Data
 public class StockDto {
 	
-	
 	private String  reference;
-	private String  name;
+	private String  title;
 	private Date    dateExistant;
 	private double  niveauStock;
 	private StockStatus  status;
 	private double  valueStock;
-	private List<StockOperationDto> stockOperationsDto;
+	private List<StockOperationDto> stockOperationDtos;
+	private List<BalanceDto>  balanceDtos;
 
 }

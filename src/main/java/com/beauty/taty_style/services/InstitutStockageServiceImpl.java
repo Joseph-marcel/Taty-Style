@@ -2,11 +2,16 @@ package com.beauty.taty_style.services;
 
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.beauty.taty_style.dtos.BalanceDto;
+import com.beauty.taty_style.dtos.StockDto;
+import com.beauty.taty_style.dtos.StockOperationDto;
 import com.beauty.taty_style.exceptions.StockNotFoundException;
+import com.beauty.taty_style.mappers.StockMapperImpl;
 import com.beauty.taty_style.models.*;
 import com.beauty.taty_style.repositories.StockRepository;
 
@@ -19,14 +24,17 @@ public class InstitutStockageServiceImpl implements InstitutStockageService{
 	
 	private  StockRepository stockRepo;
     private  InstitutOperationService instOptService;
+    private  StockMapperImpl dtoMapper;
     
 	
 	
     //Create Stock entity
 	@Override
-	public Stock createStock(Stock stock) {
+	public StockDto createStock(Stock stock) {
 		// TODO Auto-generated method stub
-		Stock existingStock = getStockByTitle(stock.getTitle());
+		
+		StockDto existingStockDto = getStockByTitle(stock.getTitle());
+		Stock    existingStock = dtoMapper.fromStockDto(existingStockDto);
 		    if(existingStock == null) {
 		    	stock.setReference(UUID.randomUUID().toString());
 				stock.setTitle(stock.getTitle());
@@ -37,9 +45,9 @@ public class InstitutStockageServiceImpl implements InstitutStockageService{
 				stock.setLastOperationStatus(StockStatus.EMPTY);
 				Stock savedStock = stockRepo.save(stock);
 				
-				return savedStock;
+				return dtoMapper.fromStock(savedStock);
 		    }else {
-		    	return existingStock;
+		    	return dtoMapper.fromStock(existingStock);
 		    }
 			
 	}
@@ -47,18 +55,27 @@ public class InstitutStockageServiceImpl implements InstitutStockageService{
 	
 	//Consult Stock
 	@Override
-	public Stock consult(String ref) {
+	public StockDto consult(String ref) {
 		// TODO Auto-generated method stub
 		Stock existingStock = stockRepo.findById(ref)
 				.orElseThrow(()-> new StockNotFoundException("Ce stock n'existe pas"));
+		StockDto stockDto = dtoMapper.fromStock(existingStock);
+		List<StockOperationDto> stockOperationDtos = existingStock.getStockOperations().stream()
+				                                                  .map(stockOpt -> dtoMapper.fromStockOperation(stockOpt))
+				                                                  .collect(Collectors.toList());
+		         stockDto.setStockOperationDtos(stockOperationDtos);
+		List<BalanceDto> balanceDtos = existingStock.getBalances().stream()
+				                                    .map(balance -> dtoMapper.fromBalance(balance))
+				                                    .collect(Collectors.toList());
+		         stockDto.setBalanceDtos(balanceDtos);
 		
-		return existingStock;
+		return stockDto;
 	}
 	
 	
 	//Update Stock
 	@Override
-	public Stock updateStock(String ref, Stock stock) {
+	public StockDto updateStock(String ref, Stock stock) {
 		// TODO Auto-generated method stub
 		Stock existingStock = stockRepo.findById(ref).orElse(stock);
 		      existingStock.setReference(stock.getReference());
@@ -70,7 +87,7 @@ public class InstitutStockageServiceImpl implements InstitutStockageService{
 		      existingStock.setLastOperationStatus(stock.getLastOperationStatus());
 	    Stock updatedStock = stockRepo.save(existingStock);
 	    
-		return updatedStock;
+		return dtoMapper.fromStock(updatedStock);
 	}
 	
 	
@@ -94,19 +111,22 @@ public class InstitutStockageServiceImpl implements InstitutStockageService{
 	
 	//Get all stocks
 	@Override
-	public List<Stock> stocks() {
+	public List<StockDto> stocks() {
 		// TODO Auto-generated method stub
 		List<Stock> stocks = stockRepo.findAll();
+		List<StockDto> stockDtos = stocks.stream()
+				                         .map(stock -> dtoMapper.fromStock(stock))
+				                         .collect(Collectors.toList());
 		
-		return stocks;
+		return stockDtos;
 	}
 
 
 	//Get stock by title
 	@Override
-	public Stock getStockByTitle(String title) {
+	public StockDto getStockByTitle(String title) {
 		// TODO Auto-generated method stub
 		
-		return stockRepo.findByTitle(title);
+		return dtoMapper.fromStock(stockRepo.findByTitle(title)) ;
 	}
 }

@@ -2,18 +2,19 @@ package com.beauty.taty_style.services;
 
 import java.util.List;
 
+import com.beauty.taty_style.dtos.StockDto;
 import com.beauty.taty_style.exceptions.StockNotFoundException;
 import com.beauty.taty_style.models.*;
 
 public interface InstitutStockageService {
 	
 	//STOCK
-		Stock createStock(Stock stock);
-		Stock updateStock(String ref,Stock stock) ;
-	    Stock consult(String ref) throws StockNotFoundException;
+		StockDto createStock(Stock stock);
+		StockDto updateStock(String ref,Stock stock) ;
+	    StockDto consult(String ref) throws StockNotFoundException;
 	    void  addProductToStock(String ref,StockOperation stockOpt,Long pdtId);
 	    void  removeProductToStock(String ref,StockOperation stockOpt,Long pdtId);
-	    Stock getStockByTitle(String title);
-	    List<Stock> stocks();
+	    StockDto getStockByTitle(String title);
+	    List<StockDto> stocks();
 
 }

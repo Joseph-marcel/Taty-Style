@@ -10,6 +10,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.beauty.taty_style.dtos.StockDto;
+import com.beauty.taty_style.dtos.StockOperationDto;
 import com.beauty.taty_style.models.OperationType;
 import com.beauty.taty_style.models.Stock;
 import com.beauty.taty_style.models.StockOperation;
@@ -27,23 +29,23 @@ public class StockController {
 	
 	
 	@GetMapping("/stocks")
-	public List<Stock> listStocks(){
+	public List<StockDto> listStocks(){
 		
 		return stockService.stocks();
 	}
 	
 	
 	@GetMapping("/stocks/{ref}")
-	public Stock consultStock(@PathVariable String ref) {
+	public StockDto consultStock(@PathVariable String ref) {
 		
-		Stock stck = stockService.consult(ref);
+		StockDto stckDto = stockService.consult(ref);
 		
-		return stck;
+		return stckDto;
 	}
 	
 	
 	@PostMapping("/stocks")
-	public Stock createStock(@RequestBody Stock stck) {
+	public StockDto createStock(@RequestBody Stock stck) {
 		
 		return stockService.createStock(stck);
 	}
@@ -66,7 +68,7 @@ public class StockController {
 	
 	
 	@GetMapping("/stocks/operations")
-	public List<StockOperation> listStockOperation(){
+	public List<StockOperationDto> listStockOperation(){
 		
 		return optService.listStockOperations();
 	}

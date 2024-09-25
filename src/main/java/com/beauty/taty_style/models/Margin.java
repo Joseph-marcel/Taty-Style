@@ -3,8 +3,6 @@ package com.beauty.taty_style.models;
 
 import java.util.Date;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -28,8 +26,8 @@ public class Margin {
 	private double amount;
 	@Temporal(TemporalType.DATE)
 	private Date   saleDate;
+	private double quantity;
 	@ManyToOne
-	@JsonIgnore
 	private Product product;
 	
 }

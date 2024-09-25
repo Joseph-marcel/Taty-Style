@@ -1,11 +1,14 @@
 package com.beauty.taty_style.services;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.beauty.taty_style.dtos.StockOperationDto;
 import com.beauty.taty_style.exceptions.*;
+import com.beauty.taty_style.mappers.StockMapperImpl;
 import com.beauty.taty_style.models.*;
 import com.beauty.taty_style.repositories.*;
 
@@ -22,7 +25,8 @@ public class InstitutOperationServiceImpl implements InstitutOperationService{
 	private StockRepository           stockRepo;
 	private ProductRepository         pdtRepo;
 	private MarginRepository          marginRepo;
-	private  BalanceRepository        balanceRepo;
+	private BalanceRepository        balanceRepo;
+	private StockMapperImpl          dtoMapper;
 	
 	
 	
@@ -107,6 +111,7 @@ public class InstitutOperationServiceImpl implements InstitutOperationService{
 						Margin margin = new Margin();
 						       margin.setAmount(stockOpt.getQuantity() * (pdt.getOutStockPrice() - pdt.getInStockPrice()));
 						       margin.setSaleDate(stockOpt.getDateOperation());
+						       margin.setQuantity(stockOpt.getQuantity());
 						       margin.setProduct(pdt);
 						marginRepo.save(margin);
 						
@@ -128,22 +133,26 @@ public class InstitutOperationServiceImpl implements InstitutOperationService{
 	
 	//Get all stock operation
 	@Override
-	public List<StockOperation> listStockOperations() {
+	public List<StockOperationDto> listStockOperations() {
 		// TODO Auto-generated method stub
+		List<StockOperation> stockOperations = stockOptRepo.findAll();
+		List<StockOperationDto> stockOperationDtos = stockOperations.stream()
+				                                                    .map(stockOpt -> dtoMapper.fromStockOperation(stockOpt))
+				                                                    .collect(Collectors.toList());
 		
-		return stockOptRepo.findAll();
+		return stockOperationDtos;
 	}
 	
 	
 	//Get stock operation by operationNumber
 	@Override
-	public StockOperation getStockOperationByNumber(Long operationNumber) {
+	public StockOperationDto getStockOperationByNumber(Long operationNumber) {
 		// TODO Auto-generated method stub
 		
 		StockOperation stockOpt = stockOptRepo.findById(operationNumber)
 				.orElseThrow(()-> new StockOperationNotFoundException("Cette operation n'existe pas."));
 		
-		return stockOpt;
+		return dtoMapper.fromStockOperation(stockOpt);
 	}
 
 
@@ -154,7 +163,8 @@ public class InstitutOperationServiceImpl implements InstitutOperationService{
 		
 		Stock stock = stockRepo.getReferenceById(ref);
 		Product pdt = pdtService.getProductByPdtId(pdtId);
-		StockOperation existingStockOpt = getStockOperationByNumber(operationNumber);
+		StockOperationDto existingStockOptDto = getStockOperationByNumber(operationNumber);
+		StockOperation existingStockOpt = dtoMapper.fromStockOperationDto(existingStockOptDto);
 		               existingStockOpt.setDateOperation(existingStockOpt.getDateOperation());
 		               existingStockOpt.setQuantity(existingStockOpt.getQuantity());
 		               existingStockOpt.setType(OperationType.CREDIT);

@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.beauty.taty_style.dtos.ProductDto;
 import com.beauty.taty_style.exceptions.ProductNotFoundException;
 import com.beauty.taty_style.models.Product;
 import com.beauty.taty_style.services.InstitutProductService;
@@ -24,22 +25,21 @@ public class ProductController {
 	private InstitutProductService   productService;
 	
 	@GetMapping("/products")
-	public List<Product> getProducts(){
+	public List<ProductDto> getProducts(){
 		
-		List<Product> products = productService.products();
+		List<ProductDto> productDtos = productService.products();
 		
 		
-		return products;
+		return productDtos;
 	}
 	
 	
 	@PostMapping("/products")
-	public Product createProduct(@RequestBody Product pdt) {
+	public ProductDto createProduct(@RequestBody Product pdt) {
 		
-		Product savedProduct = productService.createProduct(pdt);
+		ProductDto pdtDto = productService.createProduct(pdt);
 		
-		
-		return savedProduct;
+		return pdtDto;
 	}
 	
 	
@@ -54,21 +54,21 @@ public class ProductController {
 	
 	
 	@PutMapping("/products/{pdtId}")
-	public Product updateProduct(@PathVariable Long pdtId,@RequestBody Product pdt) {
+	public ProductDto updateProduct(@PathVariable Long pdtId,@RequestBody Product pdt) {
 		
-		Product updatedProduct = productService.updateProduct(pdt, pdtId);
+		ProductDto updatedProductDto = productService.updateProduct(pdt, pdtId);
 		
-		return updatedProduct;
+		return updatedProductDto;
 		
 	}
 	
 	
 	@PostMapping("/products/product/setSalePrice/{pdtId}")
-	public Product salePrice(@PathVariable Long pdtId,@RequestBody Product pdt) {
+	public ProductDto salePrice(@PathVariable Long pdtId,@RequestBody Product pdt) {
 		
-		Product product = productService.setOutStockPrice(pdt, pdtId);
+		ProductDto productDto = productService.setOutStockPrice(pdt, pdtId);
 		
-		return product;
+		return productDto;
 	}
 	
 	
@@ -80,7 +80,7 @@ public class ProductController {
 	
 	
 	@GetMapping("/products/benefit/{pdtId}")
-	public Product benefit(@PathVariable Long pdtId) {
+	public ProductDto benefit(@PathVariable Long pdtId) {
 		
 		return productService.consultProduct(pdtId);
 	}

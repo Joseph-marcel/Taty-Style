@@ -4,8 +4,6 @@ package com.beauty.taty_style.models;
 import java.util.Date;
 import java.util.List;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -38,7 +36,6 @@ public class Product {
 	@Transient
 	private double totalBenefit;
 	@OneToMany(mappedBy = "product")
-	@JsonIgnore
 	private List<StockOperation> stockOperation;
 	@OneToMany(mappedBy = "product")
 	private List<Margin> margins;

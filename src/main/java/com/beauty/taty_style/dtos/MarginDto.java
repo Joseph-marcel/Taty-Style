@@ -10,5 +10,6 @@ public class MarginDto {
 	private Long marginId;
 	private double amount;
 	private Date   saleDate;
+	private double quantity;
 
 }

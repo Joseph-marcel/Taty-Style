@@ -1,6 +1,5 @@
 package com.beauty.taty_style.dtos;
 
-import java.util.Date;
 import java.util.List;
 
 import com.beauty.taty_style.models.ProductStatus;
@@ -11,14 +10,13 @@ import lombok.Data;
 @Data
 public class ProductDto {
 	
-	private String code;
+	private Long pdtId;
 	private String designation;
 	private double inStockPrice;
 	private double outStockPrice;
-	private Date   recordDate;
 	private ProductStatus status;
 	private double totalBenefit;
-	private double margin;
+	private List<StockOperationDto> stockOperationDtos;
 	private List<MarginDto> marginsDto;
 
 }
