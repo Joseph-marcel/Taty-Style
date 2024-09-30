@@ -3,10 +3,16 @@ package com.beauty.taty_style.services;
 
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 
+import com.beauty.taty_style.dtos.AllowanceDto;
+import com.beauty.taty_style.dtos.BillDto;
+import com.beauty.taty_style.dtos.CustomerDto;
+import com.beauty.taty_style.dtos.PackDto;
 import com.beauty.taty_style.exceptions.InsuffissantDepositException;
+import com.beauty.taty_style.mappers.StockMapperImpl;
 import com.beauty.taty_style.models.Allowance;
 import com.beauty.taty_style.models.Bill;
 import com.beauty.taty_style.models.Customer;
@@ -19,10 +25,12 @@ import com.beauty.taty_style.repositories.PackRepository;
 
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 
 @AllArgsConstructor
 @Service
+@Slf4j
 @Transactional
 public class InstitutBillServiceImpl implements InstitutBillService{
 	
@@ -30,6 +38,8 @@ public class InstitutBillServiceImpl implements InstitutBillService{
 	private CustomerRepository  custRepo;
 	private BillRepository      billRepo;
 	private PackRepository      packRepo;
+	private StockMapperImpl     dtoMapper;
+	
 	
 	
 	
@@ -40,27 +50,29 @@ public class InstitutBillServiceImpl implements InstitutBillService{
 		return custRepo.findByPhoneNumber(phoneNumber);
 	}
 
+	
 	@Override
-	public Customer createCustomer(Customer cstm) {
+	public CustomerDto createCustomer(Customer cstm) {
 		// TODO Auto-generated method stub
 		Customer existingCstm = getCustomerByPhoneNumber(cstm.getPhoneNumber());
 		if(existingCstm != null) {
-			return existingCstm;
+			return dtoMapper.fromCustomer(existingCstm);
 		}
-		   Customer savedCstm = custRepo.save(cstm);
+		   CustomerDto savedCstmDto = dtoMapper.fromCustomer(custRepo.save(cstm));
 		   
-		return savedCstm;
+		return savedCstmDto;
 	}
-
 	
 	
 	@Override
 	public Allowance createAllowance(Allowance allowance) {
 		// TODO Auto-generated method stub
+		Allowance savedAllowance = allowanceRepo.save(allowance);
 		
-		return allowanceRepo.save(allowance);
+		return savedAllowance;
 	}
 
+	
 	@Override
 	public Allowance saveAllowance(Allowance allowance) {
 		// TODO Auto-generated method stub
@@ -74,6 +86,19 @@ public class InstitutBillServiceImpl implements InstitutBillService{
 		return newAllowance;
 	}
 
+	
+	@Override
+	public CustomerDto updateCustomer(Customer cstm, String phoneNumber) {
+		// TODO Auto-generated method stub
+		Customer existingCstm = getCustomerByPhoneNumber(phoneNumber);
+		         existingCstm.setFirstName(cstm.getFirstName());
+		         existingCstm.setPhoneNumber(cstm.getPhoneNumber());
+		         
+		return dtoMapper.fromCustomer(existingCstm);
+	}
+	
+	
+	
 	@Override
 	public Allowance updateAllowance(Allowance allowance) {
 		// TODO Auto-generated method stub
@@ -96,8 +121,9 @@ public class InstitutBillServiceImpl implements InstitutBillService{
 	@Override
 	public List<Allowance> getAllowances() {
 		// TODO Auto-generated method stub
+		List<Allowance> allowances = allowanceRepo.findAllByOrderByNameAsc();
 		
-		return allowanceRepo.findAllByOrderByNameAsc();
+		return allowances;
 	}
 
 	@Override
@@ -111,19 +137,25 @@ public class InstitutBillServiceImpl implements InstitutBillService{
 	public void removeAllowanceById(Long number) {
 		// TODO Auto-generated method stub
 		Allowance existingAllowance = getAllowanceById(number);
-		          getAllowances().remove(existingAllowance);
+		/*
+		 * List<Allowance> allowances = getAllowanceDtos().stream() .map(allowanceDto ->
+		 * dtoMapper.fromAllowanceDto(allowanceDto)) .collect(Collectors.toList());
+		 * allowances.remove(existingAllowance);
+		 */
 	}
 	
 	
 	
 
 	@Override
-	public Bill createBill(Bill bill) {
+	public BillDto createBill(Bill bill) {
 		// TODO Auto-generated method stub
-		Customer cstm = createCustomer(bill.getCustomer());
+		CustomerDto cstmDto = createCustomer(bill.getCustomer());
+		Customer cstm = dtoMapper.fromCustomerDto(cstmDto);
 		Pack pack = createPack(bill.getPack());
-		     getAllowances().forEach(all -> pack.getAllowances().add(all));
-		     getAllowances().forEach(all -> all.getPacks().add(pack));
+		getAllowances().forEach(allowance -> pack.getAllowances().add(allowance));
+		getAllowances().forEach(allowance -> allowance.getPacks().add(pack));
+		    
 		     if((bill.getDeposit() - cost()) < 0) throw new InsuffissantDepositException("Somme inférieur au montant total des prestations");
 		
 		         bill = Director.billBuilder()
@@ -137,35 +169,40 @@ public class InstitutBillServiceImpl implements InstitutBillService{
 		        		        .build();	
 		         Bill savedBill = billRepo.save(bill);
 		         
-		         
-		return savedBill;
+		return convertBill(savedBill);
 	}
 	
 	@Override
-	public Bill getBillByBillId(String billId) {
+	public BillDto getBillByBillId(String billId) {
 		// TODO Auto-generated method stub
 		Bill existingBill = billRepo.findById(billId).orElse(null);
-		     
-		return existingBill;
+		
+		return convertBill(existingBill);
 	}
 
 	
 	@Override
-	public Bill updateBill(String billId, Bill bill) {
+	public BillDto updateBill(String billId, Bill bill) {
 		// TODO Auto-generated method stub
-		Bill existingBill = getBillByBillId(billId);
+		BillDto existingBillDto = getBillByBillId(billId);
+		Bill existingBill = dtoMapper.fromBillDto(existingBillDto);
 		     existingBill.setBillDate(bill.getBillDate());
 		     existingBill.setDeposit(bill.getDeposit());
 		     
-		return billRepo.save(existingBill);
+		return dtoMapper.fromBill(billRepo.save(existingBill));
 	}
 
 	
 	@Override
-	public List<Bill> getAllBills() {
+	public List<BillDto> getAllBills() {
 		// TODO Auto-generated method stub
+		List<Bill> bills = billRepo.findAllByOrderByBillDateDesc();
+		List<BillDto> billDtos = bills.stream()
+				                      .map(bill -> dtoMapper.fromBill(bill))
+				                      .collect(Collectors.toList());
+		              
 		
-		return billRepo.findAllByOrderByBillDateDesc();
+		return billDtos;
 	}
 
 	
@@ -182,6 +219,23 @@ public class InstitutBillServiceImpl implements InstitutBillService{
 		// TODO Auto-generated method stub
 		
 		return packRepo.save(pack);
+	}
+	
+
+	@Override
+	public BillDto convertBill(Bill bill) {
+		// TODO Auto-generated method stub
+		BillDto billDto = dtoMapper.fromBill(bill);
+		Customer cstm = getCustomerByPhoneNumber(bill.getCustomer().getPhoneNumber());
+		        billDto.setCustomerDto(dtoMapper.fromCustomer(cstm));
+		List<AllowanceDto> allowanceDtos = bill.getPack().getAllowances().stream()
+                                                       .map(allowance -> dtoMapper.fromAllowance(allowance))
+                                                       .collect(Collectors.toList());
+		PackDto packDto = dtoMapper.fromPack(bill.getPack());
+		        packDto.setAllowancesDto(allowanceDtos);
+		        billDto.setPackDto(packDto);
+		        
+		return billDto;
 	}
 
 }

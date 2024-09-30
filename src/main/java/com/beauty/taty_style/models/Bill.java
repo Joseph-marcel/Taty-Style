@@ -30,7 +30,7 @@ public class Bill {
 	private double deposit;
 	private double refund;
 	@Temporal(TemporalType.DATE)
-	@DateTimeFormat(pattern = "yyyy-MM-dd")
+	@DateTimeFormat(pattern = "dd-MM-yyyy")
 	private Date   billDate;
 	@ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
 	@Default

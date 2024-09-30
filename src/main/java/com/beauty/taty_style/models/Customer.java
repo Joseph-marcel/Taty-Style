@@ -3,8 +3,6 @@ package com.beauty.taty_style.models;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -28,7 +26,6 @@ public class Customer {
 	private String firstName;
 	private String phoneNumber;
 	@OneToMany(mappedBy = "customer",cascade = CascadeType.ALL)
-	@JsonIgnore
 	private List<Bill> bills;
 	
     public static class CustomerBuilder{

@@ -4,6 +4,8 @@ package com.beauty.taty_style.services;
 
 import java.util.List;
 
+import com.beauty.taty_style.dtos.BillDto;
+import com.beauty.taty_style.dtos.CustomerDto;
 import com.beauty.taty_style.exceptions.InsuffissantDepositException;
 import com.beauty.taty_style.models.Allowance;
 import com.beauty.taty_style.models.Bill;
@@ -15,7 +17,8 @@ import com.beauty.taty_style.models.Pack;
 public interface InstitutBillService {
 	
 	Customer getCustomerByPhoneNumber(String phoneNumber);
-	Customer createCustomer(Customer cstm);
+	CustomerDto createCustomer(Customer cstm);
+	CustomerDto updateCustomer(Customer cstm,String phoneNumber);
 	
 	Pack createPack(Pack pack);
 	
@@ -28,10 +31,11 @@ public interface InstitutBillService {
 	List<Allowance> getAllowances();
 	
 	
-	Bill createBill(Bill bill) throws InsuffissantDepositException;
-	Bill getBillByBillId(String billId);
-	Bill updateBill(String billId,Bill bill);
-	List<Bill> getAllBills();
+	BillDto createBill(Bill bill) throws InsuffissantDepositException;
+	BillDto convertBill(Bill bill);
+	BillDto getBillByBillId(String billId);
+	BillDto updateBill(String billId,Bill bill);
+	List<BillDto> getAllBills();
 	double cost();
 	
 }

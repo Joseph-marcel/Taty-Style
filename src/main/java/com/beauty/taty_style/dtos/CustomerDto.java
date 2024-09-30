@@ -9,8 +9,8 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class CustomerDto {
 	
-	private Long number;
-	private String name;
+	private Long customerId;
+	private String firstName;
 	private String phoneNumber;
 
 }

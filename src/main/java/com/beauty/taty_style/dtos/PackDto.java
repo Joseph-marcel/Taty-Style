@@ -13,7 +13,6 @@ import lombok.NoArgsConstructor;
 public class PackDto {
 	
 	private Long packId;
-	private List<BillDto> billsDto;
 	private List<AllowanceDto> allowancesDto;
 
 }

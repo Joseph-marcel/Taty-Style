@@ -3,13 +3,21 @@ package com.beauty.taty_style.mappers;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
+import com.beauty.taty_style.dtos.AllowanceDto;
 import com.beauty.taty_style.dtos.BalanceDto;
+import com.beauty.taty_style.dtos.BillDto;
+import com.beauty.taty_style.dtos.CustomerDto;
 import com.beauty.taty_style.dtos.MarginDto;
+import com.beauty.taty_style.dtos.PackDto;
 import com.beauty.taty_style.dtos.ProductDto;
 import com.beauty.taty_style.dtos.StockDto;
 import com.beauty.taty_style.dtos.StockOperationDto;
+import com.beauty.taty_style.models.Allowance;
 import com.beauty.taty_style.models.Balance;
+import com.beauty.taty_style.models.Bill;
+import com.beauty.taty_style.models.Customer;
 import com.beauty.taty_style.models.Margin;
+import com.beauty.taty_style.models.Pack;
 import com.beauty.taty_style.models.Product;
 import com.beauty.taty_style.models.Stock;
 import com.beauty.taty_style.models.StockOperation;
@@ -87,5 +95,68 @@ public class StockMapperImpl {
 		
 		return balance;
 	}
+    
+    public PackDto fromPack(Pack pack) {
+    	PackDto packDto = new PackDto();
+    	BeanUtils.copyProperties(pack, packDto);
+    	
+    	return packDto;
+    }
+    
+    
+    public Pack fromPackDto(PackDto packDto) {
+    	Pack pack = new Pack();
+    	BeanUtils.copyProperties(packDto, pack);
+    	
+    	return pack;
+    }
+    
+    
+    public CustomerDto fromCustomer(Customer customer) {
+    	CustomerDto customerDto = new CustomerDto();
+    	BeanUtils.copyProperties(customer, customerDto);
+    	
+    	return customerDto;
+    }
+    
+    
+    public Customer fromCustomerDto(CustomerDto customerDto) {
+    	Customer customer = new Customer();
+    	BeanUtils.copyProperties(customerDto, customer);
+    	
+    	return customer;
+    }
+    
+    
+    public BillDto fromBill(Bill bill) {
+    	BillDto billDto = new BillDto();
+    	BeanUtils.copyProperties(bill, billDto);
+    	
+    	return billDto;
+    }
+    
+    
+    public Bill fromBillDto(BillDto billDto) {
+    	Bill bill = new Bill();
+    	BeanUtils.copyProperties(billDto, bill);
+    	
+    	return bill;
+    }
+    
+    
+    public AllowanceDto fromAllowance(Allowance allowance) {
+    	AllowanceDto allowanceDto = new AllowanceDto();
+    	BeanUtils.copyProperties(allowance, allowanceDto);
+    	
+    	return  allowanceDto;
+    }
+    
+    
+    public Allowance fromAllowanceDto(AllowanceDto allowanceDto) {
+    	Allowance allowance = new Allowance();
+    	BeanUtils.copyProperties(allowance, allowanceDto);
+    	
+    	return  allowance;
+    }
 	
 }
