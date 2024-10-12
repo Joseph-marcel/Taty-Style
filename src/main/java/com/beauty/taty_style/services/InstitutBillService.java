@@ -4,7 +4,11 @@ package com.beauty.taty_style.services;
 
 import java.util.List;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+
 import com.beauty.taty_style.dtos.BillDto;
+import com.beauty.taty_style.dtos.BillPageDto;
 import com.beauty.taty_style.dtos.CustomerDto;
 import com.beauty.taty_style.exceptions.InsuffissantDepositException;
 import com.beauty.taty_style.models.Allowance;
@@ -36,6 +40,7 @@ public interface InstitutBillService {
 	BillDto getBillByBillId(String billId);
 	BillDto updateBill(String billId,Bill bill);
 	List<BillDto> getAllBills();
+	BillPageDto  getBillsByPage(int page,int size);
 	double cost();
 	
 }

@@ -5,10 +5,13 @@ import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import com.beauty.taty_style.dtos.AllowanceDto;
 import com.beauty.taty_style.dtos.BillDto;
+import com.beauty.taty_style.dtos.BillPageDto;
 import com.beauty.taty_style.dtos.CustomerDto;
 import com.beauty.taty_style.dtos.PackDto;
 import com.beauty.taty_style.exceptions.InsuffissantDepositException;
@@ -237,5 +240,23 @@ public class InstitutBillServiceImpl implements InstitutBillService{
 		        
 		return billDto;
 	}
+
+
+	
+	  @Override
+	  public BillPageDto getBillsByPage(int page,int size) {
+	  //Auto-generated method stub 
+	  Page<Bill> billPages = billRepo.findByOrderByBillDateDesc(PageRequest.of(page, size));
+	  List<BillDto> billDtos = billPages.getContent().stream().map(bill  -> dtoMapper.fromBill(bill)).collect(Collectors.toList());
+	  BillPageDto billPageDto = new BillPageDto();
+	              billPageDto.setBillDtos(billDtos);
+	              billPageDto.setPageSize(size);
+	              billPageDto.setCurrentPage(page);
+	              billPageDto.setTotalPages(billPages.getTotalPages());
+	  
+	  
+	  return billPageDto; 
+	  }
+	 
 
 }

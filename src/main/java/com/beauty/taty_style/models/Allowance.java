@@ -34,6 +34,5 @@ public class Allowance {
 	@Enumerated(EnumType.STRING)
 	private Color color;
 	@ManyToMany
-	@JsonIgnore
 	private List<Pack> packs = new ArrayList<Pack>();
 }

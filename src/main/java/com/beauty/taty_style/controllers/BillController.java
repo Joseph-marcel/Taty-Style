@@ -7,10 +7,12 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 
 import com.beauty.taty_style.dtos.BillDto;
+import com.beauty.taty_style.dtos.BillPageDto;
 import com.beauty.taty_style.exceptions.InsuffissantDepositException;
 import com.beauty.taty_style.models.Allowance;
 import com.beauty.taty_style.models.Bill;
@@ -68,6 +70,15 @@ public class BillController {
 	public List<BillDto> getAllBills(){
 		
 		return billService.getAllBills();
+	}
+	
+	
+	@GetMapping("/billing/billPage")
+	public BillPageDto getAllBills(
+			 @RequestParam(name="page",defaultValue = "0") int page,
+			 @RequestParam(name="size",defaultValue = "2") int size){
+		
+		return billService.getBillsByPage(page, size);
 	}
 	
 }

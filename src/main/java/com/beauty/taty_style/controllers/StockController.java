@@ -8,10 +8,13 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.beauty.taty_style.dtos.StockDto;
+import com.beauty.taty_style.dtos.StockHistoryDto;
 import com.beauty.taty_style.dtos.StockOperationDto;
+import com.beauty.taty_style.exceptions.StockNotFoundException;
 import com.beauty.taty_style.models.OperationType;
 import com.beauty.taty_style.models.Stock;
 import com.beauty.taty_style.models.StockOperation;
@@ -78,6 +81,16 @@ public class StockController {
 	public void correctCreditStockOperation(@PathVariable Long operationNumber,@PathVariable String ref,@PathVariable Long pdtId) {
 		
 		optService.updateCreditStockOperation(operationNumber, ref, pdtId);
+	}
+	
+	
+	@GetMapping("/stocks/{ref}/pageOperations")
+	public StockHistoryDto getStockHistory(@PathVariable String ref,
+			                               @RequestParam(name="page",defaultValue = "0") int page,
+			                               @RequestParam(name="size",defaultValue = "4") int size) throws StockNotFoundException{
+		
+		
+		return stockService.history(ref, page, size);
 	}
 
 }
