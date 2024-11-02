@@ -13,11 +13,13 @@ import com.beauty.taty_style.models.*;
 import com.beauty.taty_style.repositories.*;
 
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 
 @Service
 @AllArgsConstructor
 @Transactional
+@Slf4j
 public class InstitutOperationServiceImpl implements InstitutOperationService{
 	
 	private StockOperationRepository  stockOptRepo;
@@ -60,7 +62,7 @@ public class InstitutOperationServiceImpl implements InstitutOperationService{
 			      stock.getStockOperations().add(stockOpt);
 			   stockRepo.save(stock);
 			   
-			   //product updating
+			   //product status updating
 			      if(stock.getNiveauStock() >= 1) {
 			    	 pdt.setStatus(ProductStatus.DISPONIBLE);
 			      }
@@ -79,6 +81,8 @@ public class InstitutOperationServiceImpl implements InstitutOperationService{
 		// TODO Auto-generated method stub
 		Stock stock = stockRepo.getReferenceById(ref);
 		Product pdt = pdtService.getProductByPdtId(pdtId);
+		log.info(stock.getTitle());
+		log.info(pdt.getDesignation());
 		
 		//Filtering only credit type stockOperations
 		List<StockOperation>  creditStockOperations = stock.getStockOperations().stream().filter(st -> st.getType().equals(OperationType.CREDIT)).toList();
