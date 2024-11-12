@@ -87,7 +87,7 @@ public class StockController {
 	@GetMapping("/stocks/{ref}/pageOperations")
 	public StockHistoryDto getStockHistory(@PathVariable String ref,
 			                               @RequestParam(name="page",defaultValue = "0") int page,
-			                               @RequestParam(name="size",defaultValue = "4") int size) throws StockNotFoundException{
+			                               @RequestParam(name="size",defaultValue = "2") int size) throws StockNotFoundException{
 		
 		
 		return stockService.history(ref, page, size);

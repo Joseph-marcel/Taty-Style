@@ -20,7 +20,7 @@ public interface InstitutProductService {
     void    deleteProduct(Long pdtId);
     List<ProductDto> products();
     double marginAmountPerProduct(Long pdtId);
-    ProductDto consultProduct(Long pdtId);
+    ProductDto consultProduct(Long pdtId,int page, int size);
     double total();
 
 }

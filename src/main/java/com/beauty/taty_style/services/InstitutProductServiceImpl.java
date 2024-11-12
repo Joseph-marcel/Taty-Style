@@ -4,16 +4,23 @@ package com.beauty.taty_style.services;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.beauty.taty_style.dtos.MarginDto;
 import com.beauty.taty_style.dtos.ProductDto;
 import com.beauty.taty_style.dtos.StockOperationDto;
+import com.beauty.taty_style.exceptions.ProductNotFoundException;
 import com.beauty.taty_style.mappers.StockMapperImpl;
+import com.beauty.taty_style.models.Margin;
 import com.beauty.taty_style.models.Product;
 import com.beauty.taty_style.models.ProductStatus;
+import com.beauty.taty_style.models.StockOperation;
+import com.beauty.taty_style.repositories.MarginRepository;
 import com.beauty.taty_style.repositories.ProductRepository;
+import com.beauty.taty_style.repositories.StockOperationRepository;
 
 import lombok.AllArgsConstructor;
 
@@ -26,6 +33,8 @@ public class InstitutProductServiceImpl implements InstitutProductService{
 	
 	private ProductRepository pdtRepo;
 	private StockMapperImpl dtoMapper;
+	private StockOperationRepository  stockOptRepo;
+	private MarginRepository          marginRepo;
 	
 	
 	@Override
@@ -67,7 +76,6 @@ public class InstitutProductServiceImpl implements InstitutProductService{
 		Product existingProduct = getProductByPdtId(pdtId);
 		        existingProduct.setDesignation(pdt.getDesignation());
 		        existingProduct.setInStockPrice(pdt.getInStockPrice());
-		        existingProduct.setOutStockPrice(pdt.getOutStockPrice());
 		        existingProduct.setRecordDate(pdt.getRecordDate());
 		Product updatedProduct = pdtRepo.save(existingProduct);
 		ProductDto pdtDto = dtoMapper.fromProduct(updatedProduct);
@@ -153,20 +161,34 @@ public class InstitutProductServiceImpl implements InstitutProductService{
 
 	//Set total benefit in product consult action
 	@Override
-	public ProductDto consultProduct(Long pdtId) {
+	public ProductDto consultProduct(Long pdtId,int page, int size) throws ProductNotFoundException{
 		// TODO Auto-generated method stub
 		double benefit = marginAmountPerProduct(pdtId);
 		Product pdt = getProductByPdtId(pdtId);
+		if(pdt == null) throw new ProductNotFoundException("Le produit n'existe pas");
 		        pdt.setTotalBenefit(benefit);
 		ProductDto pdtDto = dtoMapper.fromProduct(pdt);
-		List<StockOperationDto> stockOperationDtos = pdt.getStockOperation().stream()
-				                                        .map(stockOpt -> dtoMapper.fromStockOperation(stockOpt))
-				                                        .collect(Collectors.toList());
-		pdtDto.setStockOperationDtos(stockOperationDtos);
-		List<MarginDto> marginDtos = pdt.getMargins().stream()
-				                        .map(margin -> dtoMapper.fromMargin(margin))
-				                        .collect(Collectors.toList());
-		pdtDto.setMarginsDto(marginDtos);
+		  
+		Page<StockOperation> stockOperationPages = stockOptRepo.findByProductPdtId(pdtId, PageRequest.of(page,size));
+		List<StockOperationDto> stockOperationDtos = stockOperationPages.getContent().stream()
+				                                     .map(stockOperation->dtoMapper.fromStockOperation(stockOperation))
+				                                     .collect(Collectors.toList());
+		pdtDto.setStockOperationDtos(stockOperationDtos); 
+		  
+		  Page<Margin> marginPages =  marginRepo.listMargin(pdtId, PageRequest.of(page, size));
+		  List<MarginDto> marginDtos = marginPages.getContent().stream()
+				                       .map(margin->dtoMapper.fromMargin(margin)).collect(Collectors.toList());
+		  
+		  pdtDto.setMarginsDto(marginDtos); 
+		  pdtDto.setCurrentPage(page);
+		  pdtDto.setSize(size); 
+		  if(stockOperationPages.getTotalPages() > marginPages.getTotalPages()) {
+		     pdtDto.setTotalPages(stockOperationPages.getTotalPages());
+		  }else {
+			 pdtDto.setTotalPages(marginPages.getTotalPages());
+		  }
+		 
+		
 		
 		return pdtDto;
 	}

@@ -16,6 +16,9 @@ public class ProductDto {
 	private double outStockPrice;
 	private ProductStatus status;
 	private double totalBenefit;
+	private int currentPage;
+	private int totalPages;
+	private int size;
 	private List<StockOperationDto> stockOperationDtos;
 	private List<MarginDto> marginsDto;
 

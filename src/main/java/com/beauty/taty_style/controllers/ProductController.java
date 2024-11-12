@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.beauty.taty_style.dtos.ProductDto;
@@ -80,9 +81,11 @@ public class ProductController {
 	
 	
 	@GetMapping("/products/benefit/{pdtId}")
-	public ProductDto benefit(@PathVariable Long pdtId) {
+	public ProductDto benefit(@PathVariable Long pdtId,
+			                  @RequestParam(name="page",defaultValue = "1") int page,
+			                  @RequestParam(name="size",defaultValue = "2") int size) throws ProductNotFoundException{
 		
-		return productService.consultProduct(pdtId);
+		return productService.consultProduct(pdtId,page,size);
 	}
 	
 	
