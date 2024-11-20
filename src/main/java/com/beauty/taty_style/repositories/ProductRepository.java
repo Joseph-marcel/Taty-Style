@@ -10,7 +10,7 @@ import com.beauty.taty_style.models.Product;
 
 public interface ProductRepository extends JpaRepository<Product, Long>{
 	
-	@Query(value = "SELECT * FROM Product p ORDER BY p.recordDate DESC", nativeQuery = true)
+	@Query(value = "SELECT * FROM Product p ORDER BY p.record_date", nativeQuery = true)
     Page<Product> listProducts(PageRequest pageRequest);
 	
 	Product findByDesignation(String designation);

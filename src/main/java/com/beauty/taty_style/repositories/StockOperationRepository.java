@@ -9,4 +9,5 @@ import com.beauty.taty_style.models.StockOperation;
 public interface StockOperationRepository extends JpaRepository<StockOperation, Long>{
 
 	Page<StockOperation> findByProductPdtId(Long pdtId,Pageable pageable);
+	Page<StockOperation> findByStockReference(String reference,Pageable pageable);
 }

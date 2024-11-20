@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.beauty.taty_style.dtos.StockDto;
-import com.beauty.taty_style.dtos.StockHistoryDto;
+import com.beauty.taty_style.dtos.StockDtoPage;
 import com.beauty.taty_style.dtos.StockOperationDto;
 import com.beauty.taty_style.exceptions.StockNotFoundException;
 import com.beauty.taty_style.models.OperationType;
@@ -32,9 +32,10 @@ public class StockController {
 	
 	
 	@GetMapping("/stocks")
-	public List<StockDto> listStocks(){
+	public StockDtoPage listStocks(@RequestParam(name="page",defaultValue = "0") int page,
+			                         @RequestParam(name="size",defaultValue = "5") int size){
 		
-		return stockService.stocks();
+		return stockService.stocks(page,size);
 	}
 	
 	
@@ -85,7 +86,7 @@ public class StockController {
 	
 	
 	@GetMapping("/stocks/{ref}/pageOperations")
-	public StockHistoryDto getStockHistory(@PathVariable String ref,
+	public StockDto getStockHistory(@PathVariable String ref,
 			                               @RequestParam(name="page",defaultValue = "0") int page,
 			                               @RequestParam(name="size",defaultValue = "2") int size) throws StockNotFoundException{
 		

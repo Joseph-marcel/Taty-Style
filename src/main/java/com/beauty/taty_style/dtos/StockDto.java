@@ -12,8 +12,12 @@ public class StockDto {
 	private String  title;
 	private Date    dateExistant;
 	private double  niveauStock;
-	private StockStatus  status;
-	private double  valueStock;
+	private StockStatus  lastOperationStatus;
+	private double  valueStockCredit;
+	private double  valueStockDebit;
+	private int currentPage;
+	private int size;
+	private int totalPages;
 	private List<StockOperationDto> stockOperationDtos;
 	private List<BalanceDto>  balanceDtos;
 

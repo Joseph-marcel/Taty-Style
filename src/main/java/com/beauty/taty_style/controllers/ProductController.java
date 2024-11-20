@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.beauty.taty_style.dtos.ProductDto;
+import com.beauty.taty_style.dtos.ProductPageDto;
 import com.beauty.taty_style.exceptions.ProductNotFoundException;
 import com.beauty.taty_style.models.Product;
 import com.beauty.taty_style.services.InstitutProductService;
@@ -26,12 +27,11 @@ public class ProductController {
 	private InstitutProductService   productService;
 	
 	@GetMapping("/products")
-	public List<ProductDto> getProducts(){
+	public ProductPageDto getProducts(@RequestParam(name="page",defaultValue = "0") int page,
+			                            @RequestParam(name="size",defaultValue="3") int size){
 		
-		List<ProductDto> productDtos = productService.products();
 		
-		
-		return productDtos;
+		return productService.productPages(page, size);
 	}
 	
 	
@@ -82,7 +82,7 @@ public class ProductController {
 	
 	@GetMapping("/products/benefit/{pdtId}")
 	public ProductDto benefit(@PathVariable Long pdtId,
-			                  @RequestParam(name="page",defaultValue = "1") int page,
+			                  @RequestParam(name="page",defaultValue = "0") int page,
 			                  @RequestParam(name="size",defaultValue = "2") int size) throws ProductNotFoundException{
 		
 		return productService.consultProduct(pdtId,page,size);

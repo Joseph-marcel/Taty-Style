@@ -20,4 +20,5 @@ public class StockHistoryDto {
 	private int totalPages;
 	private int size;
 	private List<StockOperationDto> stockOperationDtos;
+	private List<BalanceDto>  balanceDtos;
 }

@@ -6,11 +6,13 @@ import java.util.stream.Collectors;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.beauty.taty_style.dtos.MarginDto;
 import com.beauty.taty_style.dtos.ProductDto;
+import com.beauty.taty_style.dtos.ProductPageDto;
 import com.beauty.taty_style.dtos.StockOperationDto;
 import com.beauty.taty_style.exceptions.ProductNotFoundException;
 import com.beauty.taty_style.mappers.StockMapperImpl;
@@ -201,6 +203,21 @@ public class InstitutProductServiceImpl implements InstitutProductService{
 		double total = productDtos.stream().mapToDouble(p -> p.getTotalBenefit()).sum();
 		
 		return total;
+	}
+
+
+	@Override
+	public ProductPageDto productPages(int page,int size) {
+		// TODO Auto-generated method stub
+		Page<Product> productPages = pdtRepo.listProducts(PageRequest.of(page,size)); 
+		List<ProductDto> productDtos = productPages.getContent().stream().map(product -> dtoMapper.fromProduct(product)).collect(Collectors.toList());
+		ProductPageDto pdtPageDto = new ProductPageDto();
+		               pdtPageDto.setSize(size);
+		               pdtPageDto.setPage(page);
+		               pdtPageDto.setTotalPages(productPages.getTotalPages());
+		               pdtPageDto.setProductDtos(productDtos);
+		
+		return pdtPageDto;
 	}
 
 }

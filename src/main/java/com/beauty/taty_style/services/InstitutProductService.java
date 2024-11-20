@@ -1,8 +1,8 @@
 package com.beauty.taty_style.services;
 
 import java.util.List;
-
 import com.beauty.taty_style.dtos.ProductDto;
+import com.beauty.taty_style.dtos.ProductPageDto;
 import com.beauty.taty_style.exceptions.ProductNotFoundException;
 import com.beauty.taty_style.models.*;
 
@@ -19,6 +19,7 @@ public interface InstitutProductService {
     ProductDto saveProduct(Product pdt);
     void    deleteProduct(Long pdtId);
     List<ProductDto> products();
+    ProductPageDto productPages(int page,int size);
     double marginAmountPerProduct(Long pdtId);
     ProductDto consultProduct(Long pdtId,int page, int size);
     double total();
