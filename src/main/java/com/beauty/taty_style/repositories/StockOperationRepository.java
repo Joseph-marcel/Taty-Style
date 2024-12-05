@@ -15,4 +15,5 @@ public interface StockOperationRepository extends JpaRepository<StockOperation, 
 	Page<StockOperation> findByStockReference(String reference,Pageable pageable);
 	@Query(value = "SELECT o.product_pdt_id FROM Stock_Operation o WHERE o.stock_reference = :reference", nativeQuery = true)
 	Long  findProductId(@Param("reference") String reference);
+	
 }
