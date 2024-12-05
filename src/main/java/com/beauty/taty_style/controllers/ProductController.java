@@ -1,6 +1,6 @@
 package com.beauty.taty_style.controllers;
 
-import java.util.List;
+
 
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -39,6 +39,7 @@ public class ProductController {
 	public ProductDto createProduct(@RequestBody Product pdt) {
 		
 		ProductDto pdtDto = productService.createProduct(pdt);
+		
 		
 		return pdtDto;
 	}
@@ -82,8 +83,9 @@ public class ProductController {
 	
 	@GetMapping("/products/benefit/{pdtId}")
 	public ProductDto benefit(@PathVariable Long pdtId,
-			                  @RequestParam(name="page",defaultValue = "0") int page,
+			                  @RequestParam(name="page",defaultValue = "1") int page,
 			                  @RequestParam(name="size",defaultValue = "2") int size) throws ProductNotFoundException{
+		
 		
 		return productService.consultProduct(pdtId,page,size);
 	}

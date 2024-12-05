@@ -171,13 +171,13 @@ public class InstitutProductServiceImpl implements InstitutProductService{
 		        pdt.setTotalBenefit(benefit);
 		ProductDto pdtDto = dtoMapper.fromProduct(pdt);
 		  
-		Page<StockOperation> stockOperationPages = stockOptRepo.findByProductPdtId(pdtId, PageRequest.of(page,size));
+		Page<StockOperation> stockOperationPages = stockOptRepo.findByProductPdtId(pdtId, PageRequest.of(page-1,size));
 		List<StockOperationDto> stockOperationDtos = stockOperationPages.getContent().stream()
 				                                     .map(stockOperation->dtoMapper.fromStockOperation(stockOperation))
 				                                     .collect(Collectors.toList());
 		pdtDto.setStockOperationDtos(stockOperationDtos); 
 		  
-		  Page<Margin> marginPages =  marginRepo.listMargin(pdtId, PageRequest.of(page, size));
+		  Page<Margin> marginPages =  marginRepo.listMargin(pdtId, PageRequest.of(page-1, size));
 		  List<MarginDto> marginDtos = marginPages.getContent().stream()
 				                       .map(margin->dtoMapper.fromMargin(margin)).collect(Collectors.toList());
 		  
@@ -194,6 +194,7 @@ public class InstitutProductServiceImpl implements InstitutProductService{
 		
 		return pdtDto;
 	}
+	
 
    //Sum up margin for list of product
 	@Override

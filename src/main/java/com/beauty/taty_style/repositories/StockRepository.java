@@ -2,16 +2,18 @@ package com.beauty.taty_style.repositories;
 
 
 
-import java.util.List;
-
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+
 import com.beauty.taty_style.models.Stock;
-import com.beauty.taty_style.models.StockOperation;
 
 
 
 public interface StockRepository extends JpaRepository<Stock, String>{
 	
 	Stock findByTitle(String title);
-    List<StockOperation> findByReference(String reference);
+	@Query(value = "SELECT * FROM Stock s", nativeQuery = true)
+    Page<Stock> pageStock(PageRequest pageRequest);
 }

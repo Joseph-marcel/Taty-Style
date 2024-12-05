@@ -33,7 +33,7 @@ public class StockController {
 	
 	@GetMapping("/stocks")
 	public StockDtoPage listStocks(@RequestParam(name="page",defaultValue = "0") int page,
-			                         @RequestParam(name="size",defaultValue = "5") int size){
+			                         @RequestParam(name="size",defaultValue = "2") int size){
 		
 		return stockService.stocks(page,size);
 	}
@@ -58,8 +58,7 @@ public class StockController {
 
 	
 	@PostMapping("/stocks/operation/{ref}/{pdtId}")
-	public void saveOperation(@PathVariable String ref,@PathVariable Long pdtId,@RequestBody StockOperation stockOpt) throws InsufficientResourcesException{
-		
+	public void saveOperation(@PathVariable String ref,@PathVariable Long pdtId, @RequestBody StockOperation stockOpt) throws InsufficientResourcesException{
 			 if(stockOpt.getType() == OperationType.CREDIT) {
 				 optService.creditStockOperation(stockOpt, ref, pdtId);
 			 }else {
@@ -88,10 +87,17 @@ public class StockController {
 	@GetMapping("/stocks/{ref}/pageOperations")
 	public StockDto getStockHistory(@PathVariable String ref,
 			                               @RequestParam(name="page",defaultValue = "0") int page,
-			                               @RequestParam(name="size",defaultValue = "2") int size) throws StockNotFoundException{
+			                               @RequestParam(name="size",defaultValue = "3") int size) throws StockNotFoundException{
 		
 		
 		return stockService.history(ref, page, size);
+	}
+	
+	
+	@GetMapping("/stocks/{ref}/product/id")
+	public Long productIdInStock(@PathVariable String ref) {
+		
+		return stockService.getProductPdtIdInStock(ref);
 	}
 
 }

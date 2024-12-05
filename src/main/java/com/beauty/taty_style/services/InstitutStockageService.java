@@ -17,5 +17,6 @@ public interface InstitutStockageService {
 	    Stock getStockByTitle(String title);
 	    StockDtoPage stocks(int page,int size);
 	    StockDto history(String ref,int page,int size) throws StockNotFoundException;
+	    Long getProductPdtIdInStock(String reference);
 
 }
