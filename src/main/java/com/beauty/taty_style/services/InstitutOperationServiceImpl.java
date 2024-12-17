@@ -38,7 +38,7 @@ public class InstitutOperationServiceImpl implements InstitutOperationService{
 		// TODO Auto-generated method stub
 		
 		   Stock stock = stockRepo.getReferenceById(ref);
-		   Product pdt = pdtService.getProductByPdtId(pdtId);
+		   Product pdt = dtoMapper.fromProduct(pdtService.getProductByPdtId(pdtId));
 		   
 		   if(stock.getNiveauStock() == 0) {
 			   //Reinitialize stock before credit operation
@@ -80,7 +80,7 @@ public class InstitutOperationServiceImpl implements InstitutOperationService{
 	public void debitStockOperation(StockOperation stockOpt, String ref,Long pdtId) {
 		// TODO Auto-generated method stub
 		Stock stock = stockRepo.getReferenceById(ref);
-		Product pdt = pdtService.getProductByPdtId(pdtId);
+		Product pdt = dtoMapper.fromProduct(pdtService.getProductByPdtId(pdtId));
 		log.info(stock.getTitle());
 		log.info(pdt.getDesignation());
 		
@@ -166,7 +166,7 @@ public class InstitutOperationServiceImpl implements InstitutOperationService{
 		// TODO Auto-generated method stub
 		
 		Stock stock = stockRepo.getReferenceById(ref);
-		Product pdt = pdtService.getProductByPdtId(pdtId);
+		Product pdt = dtoMapper.fromProduct(pdtService.getProductByPdtId(pdtId));
 		StockOperationDto existingStockOptDto = getStockOperationByNumber(operationNumber);
 		StockOperation existingStockOpt = dtoMapper.fromStockOperationDto(existingStockOptDto);
 		               existingStockOpt.setDateOperation(existingStockOpt.getDateOperation());

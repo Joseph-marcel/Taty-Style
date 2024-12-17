@@ -12,13 +12,14 @@ public interface InstitutProductService {
 	
 	//PRODUCT
     ProductDto createProduct(Product pdt);
-    Product getProductByPdtId(Long pdtId) throws ProductNotFoundException;
-    Product getProductByDesignation(String designation);
+    ProductDto getProductByPdtId(Long pdtId) throws ProductNotFoundException;
+    ProductDto getProductByDesignation(String designation);
     ProductDto updateProduct(Product pdt,Long pdtId);
     ProductDto setOutStockPrice(Product pdt,Long pdtId);
     ProductDto saveProduct(Product pdt);
     void    deleteProduct(Long pdtId);
     List<ProductDto> products();
+    ProductPageDto searchProducts(String designation,int page,int size);
     ProductPageDto productPages(int page,int size);
     double marginAmountPerProduct(Long pdtId);
     ProductDto consultProduct(Long pdtId,int page, int size);

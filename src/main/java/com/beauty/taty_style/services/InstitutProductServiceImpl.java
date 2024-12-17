@@ -6,7 +6,6 @@ import java.util.stream.Collectors;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -43,7 +42,7 @@ public class InstitutProductServiceImpl implements InstitutProductService{
 	public ProductDto createProduct(Product pdt) {
 		// TODO Auto-generated method stub
 	  ProductDto pdtDto = null;
-	  Product existingPdt = getProductByDesignation(pdt.getDesignation());
+	  Product existingPdt = pdtRepo.findByDesignation(pdt.getDesignation());
 	  if(existingPdt==null) {
 		    
 		    pdt.setStatus(ProductStatus.DISPONIBLE);
@@ -62,12 +61,13 @@ public class InstitutProductServiceImpl implements InstitutProductService{
 	
 	//Get product by product Id
 	@Override
-	public Product getProductByPdtId(Long pdtId) {
+	public ProductDto getProductByPdtId(Long pdtId) {
 		// TODO Auto-generated method stub
 		Product existingProduct = pdtRepo.findById(pdtId).orElse(null);
+		ProductDto existingProductDto = dtoMapper.fromProduct(existingProduct);
 
 				
-		return existingProduct;
+		return existingProductDto;
 	}
 	
 	
@@ -75,10 +75,11 @@ public class InstitutProductServiceImpl implements InstitutProductService{
 	@Override
 	public ProductDto updateProduct(Product pdt, Long pdtId) {
 		// TODO Auto-generated method stub
-		Product existingProduct = getProductByPdtId(pdtId);
+		Product existingProduct = dtoMapper.fromProduct(getProductByPdtId(pdtId)) ;
 		        existingProduct.setDesignation(pdt.getDesignation());
 		        existingProduct.setInStockPrice(pdt.getInStockPrice());
-		        existingProduct.setRecordDate(pdt.getRecordDate());
+		        existingProduct.setOutStockPrice(pdt.getOutStockPrice());
+		 
 		Product updatedProduct = pdtRepo.save(existingProduct);
 		ProductDto pdtDto = dtoMapper.fromProduct(updatedProduct);
 		
@@ -90,7 +91,7 @@ public class InstitutProductServiceImpl implements InstitutProductService{
 	@Override
 	public void deleteProduct(Long pdtId) {
 		// TODO Auto-generated method stub
-		Product existingProduct = getProductByPdtId(pdtId);
+		Product existingProduct = dtoMapper.fromProduct(getProductByPdtId(pdtId));
 		        pdtRepo.delete(existingProduct);
 	}
 
@@ -131,11 +132,11 @@ public class InstitutProductServiceImpl implements InstitutProductService{
 
 	//Find product by designation
 	@Override
-	public Product getProductByDesignation(String designation) {
+	public ProductDto getProductByDesignation(String designation) {
 		// TODO Auto-generated method stub
 		Product pdt = pdtRepo.findByDesignation(designation);
 		
-		return pdt;
+		return dtoMapper.fromProduct(pdt);
 	}
 
 
@@ -143,7 +144,7 @@ public class InstitutProductServiceImpl implements InstitutProductService{
 	@Override
 	public ProductDto setOutStockPrice(Product pdt, Long pdtId) {
 		// TODO Auto-generated method stub
-		Product existingPdt = getProductByPdtId(pdtId);
+		Product existingPdt = dtoMapper.fromProduct(getProductByPdtId(pdtId));
 		        existingPdt.setOutStockPrice(pdt.getOutStockPrice());
 		        
 		return dtoMapper.fromProduct(pdtRepo.save(existingPdt));
@@ -154,7 +155,7 @@ public class InstitutProductServiceImpl implements InstitutProductService{
 	@Override
 	public double marginAmountPerProduct(Long pdtId) {
 		// TODO Auto-generated method stub
-	    Product pdt = getProductByPdtId(pdtId);
+	    Product pdt = pdtRepo.findById(pdtId).orElse(null);
 	    double  totalMargin = pdt.getMargins().stream().mapToDouble(mrg -> mrg.getAmount()).sum();
 		    
 		return totalMargin;
@@ -166,18 +167,18 @@ public class InstitutProductServiceImpl implements InstitutProductService{
 	public ProductDto consultProduct(Long pdtId,int page, int size) throws ProductNotFoundException{
 		// TODO Auto-generated method stub
 		double benefit = marginAmountPerProduct(pdtId);
-		Product pdt = getProductByPdtId(pdtId);
+		Product pdt = dtoMapper.fromProduct(getProductByPdtId(pdtId));
 		if(pdt == null) throw new ProductNotFoundException("Le produit n'existe pas");
 		        pdt.setTotalBenefit(benefit);
 		ProductDto pdtDto = dtoMapper.fromProduct(pdt);
 		  
-		Page<StockOperation> stockOperationPages = stockOptRepo.findByProductPdtId(pdtId, PageRequest.of(page-1,size));
+		Page<StockOperation> stockOperationPages = stockOptRepo.findByProductPdtId(pdtId, PageRequest.of(page,size));
 		List<StockOperationDto> stockOperationDtos = stockOperationPages.getContent().stream()
 				                                     .map(stockOperation->dtoMapper.fromStockOperation(stockOperation))
 				                                     .collect(Collectors.toList());
 		pdtDto.setStockOperationDtos(stockOperationDtos); 
 		  
-		  Page<Margin> marginPages =  marginRepo.listMargin(pdtId, PageRequest.of(page-1, size));
+		  Page<Margin> marginPages =  marginRepo.listMargin(pdtId, PageRequest.of(page, size));
 		  List<MarginDto> marginDtos = marginPages.getContent().stream()
 				                       .map(margin->dtoMapper.fromMargin(margin)).collect(Collectors.toList());
 		  
@@ -219,6 +220,21 @@ public class InstitutProductServiceImpl implements InstitutProductService{
 		               pdtPageDto.setProductDtos(productDtos);
 		
 		return pdtPageDto;
+	}
+
+
+	@Override
+	public ProductPageDto searchProducts(String designation,int page,int size) {
+		// TODO Auto-generated method stub
+		Page<Product> searchResults = pdtRepo.listSearchProducts(designation, PageRequest.of(page, size));
+		List<ProductDto> productDtos = searchResults.getContent().stream().map(product -> dtoMapper.fromProduct(product)).collect(Collectors.toList());
+		ProductPageDto pdtPageDto = new ProductPageDto();
+        pdtPageDto.setSize(size);
+        pdtPageDto.setPage(page);
+        pdtPageDto.setTotalPages(searchResults.getTotalPages());
+        pdtPageDto.setProductDtos(productDtos);
+
+        return pdtPageDto;
 	}
 
 }
