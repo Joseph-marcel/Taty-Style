@@ -95,6 +95,7 @@ public class InstitutProductServiceImpl implements InstitutProductService{
 		        pdtRepo.delete(existingProduct);
 	}
 
+	
     //Set margin attribute for each product
 	@Override
 	public List<ProductDto> products() {
@@ -226,7 +227,7 @@ public class InstitutProductServiceImpl implements InstitutProductService{
 	@Override
 	public ProductPageDto searchProducts(String designation,int page,int size) {
 		// TODO Auto-generated method stub
-		Page<Product> searchResults = pdtRepo.listSearchProducts(designation, PageRequest.of(page, size));
+		Page<Product> searchResults = pdtRepo.findByDesignationContainingOrderByRecordDate(designation, PageRequest.of(page, size));
 		List<ProductDto> productDtos = searchResults.getContent().stream().map(product -> dtoMapper.fromProduct(product)).collect(Collectors.toList());
 		ProductPageDto pdtPageDto = new ProductPageDto();
         pdtPageDto.setSize(size);
