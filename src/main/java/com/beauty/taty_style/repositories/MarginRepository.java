@@ -1,5 +1,7 @@
 package com.beauty.taty_style.repositories;
 
+import java.util.List;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -17,4 +19,6 @@ public interface MarginRepository extends JpaRepository<Margin, Long>{
 	
 	@Query(value="SELECT * FROM margin WHERE product_pdt_id = :pdtId ORDER BY sale_date DESC", nativeQuery = true)
 	Page<Margin> listMargin(@Param("pdtId") Long pdtId,Pageable pageable);
+	@Query(value="SELECT * FROM margin WHERE product_pdt_id = :pdtId  ORDER BY sale_date DESC", nativeQuery = true)
+	List<Margin> margins(@Param("pdtId") Long pdtId);
 }

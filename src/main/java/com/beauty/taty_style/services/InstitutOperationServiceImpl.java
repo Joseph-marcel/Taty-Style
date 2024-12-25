@@ -81,56 +81,62 @@ public class InstitutOperationServiceImpl implements InstitutOperationService{
 		// TODO Auto-generated method stub
 		Stock stock = stockRepo.getReferenceById(ref);
 		Product pdt = dtoMapper.fromProduct(pdtService.getProductByPdtId(pdtId));
-		log.info(stock.getTitle());
-		log.info(pdt.getDesignation());
+		pdt.setStockOperation(stockOptRepo.listStockOperation(pdtId));
+		pdt.setMargins(marginRepo.margins(pdtId));
+		pdt.getStockOperation().forEach(stockOpte -> System.out.println(stockOpte.getQuantity()));
 		
-		//Filtering only credit type stockOperations
-		List<StockOperation>  creditStockOperations = stock.getStockOperations().stream().filter(st -> st.getType().equals(OperationType.CREDIT)).toList();
+		//Get the recent Credit Stock Operation
+		StockOperation recentCreditStockOpt = stockOptRepo.recentLastStockOperationCredit(ref);
+		
 		double counter = 1;
-			for(StockOperation stckOpt:creditStockOperations) {
-				while(counter < 2) {
-					if(stckOpt.getProduct() == pdt) {					
-						if(stock.getNiveauStock() < stockOpt.getQuantity()) throw new InsuffisantQuantityInStock("Il n'y a plus que " + stock.getNiveauStock() + " en stock.");
-						//stockOperation creation debit
-						   stockOpt.setDateOperation(stockOpt.getDateOperation());
-						   stockOpt.setProduct(pdt);
-						   stockOpt.setQuantity(stockOpt.getQuantity());
-						   stockOpt.setAmount(stockOpt.getQuantity() * pdt.getOutStockPrice());
-						   stockOpt.setType(OperationType.DEBIT);
-						   stockOpt.setStock(stock);
-						stockOptRepo.save(stockOpt);
+		log.info("Here1");
+		while(counter < 2) {
+			log.info("Here2");	
+			if(recentCreditStockOpt.getProduct().getPdtId() == pdt.getPdtId()) {	
+				log.info("Here3");
+				if(stock.getNiveauStock() < stockOpt.getQuantity()) throw new InsuffisantQuantityInStock("Il n'y a plus que " + stock.getNiveauStock() + " en stock.");
+				//stockOperation creation debit
+				   stockOpt.setDateOperation(stockOpt.getDateOperation());
+				   stockOpt.setProduct(pdt);
+				   stockOpt.setQuantity(stockOpt.getQuantity());
+				   stockOpt.setAmount(stockOpt.getQuantity() * pdt.getOutStockPrice());
+				   stockOpt.setType(OperationType.DEBIT);
+				   stockOpt.setStock(stock);
+				stockOptRepo.save(stockOpt);
+		        log.info("Here4");
+				//stock debit operation
+				stock.setDateExistant(stockOpt.getDateOperation());
+				   stock.setNiveauStock(stock.getNiveauStock() - stockOpt.getQuantity());
+				   stock.setValueStockDebit(stock.getValueStockDebit() + (stockOpt.getQuantity() * pdt.getOutStockPrice()));
+				   stock.setLastOperationStatus(StockStatus.DEBIT);
+	               if((stock.getValueStockDebit() - stock.getValueStockCredit()) >= 0 ){
+	            	   stock.setStockBenefit((stock.getValueStockDebit() - stock.getValueStockCredit()));
+	               }
+				   stock.getStockOperations().add(stockOpt);
+				stockRepo.save(stock);
+				log.info("Here5");
 				
-						//stock debit operation
-						stock.setDateExistant(stockOpt.getDateOperation());
-						   stock.setNiveauStock(stock.getNiveauStock() - stockOpt.getQuantity());
-						   stock.setValueStockDebit(stock.getValueStockDebit() + (stockOpt.getQuantity() * pdt.getOutStockPrice()));
-						   stock.setLastOperationStatus(StockStatus.DEBIT);
-			               if((stock.getValueStockDebit() - stock.getValueStockCredit()) >= 0 ){
-			            	   stock.setStockBenefit((stock.getValueStockDebit() - stock.getValueStockCredit()));
-			               }
-						   stock.getStockOperations().add(stockOpt);
-						stockRepo.save(stock);
-						
-						//stock margin creation
-						Margin margin = new Margin();
-						       margin.setAmount(stockOpt.getQuantity() * (pdt.getOutStockPrice() - pdt.getInStockPrice()));
-						       margin.setSaleDate(stockOpt.getDateOperation());
-						       margin.setQuantity(stockOpt.getQuantity());
-						       margin.setProduct(pdt);
-						marginRepo.save(margin);
-						
-						//product updating
-						   pdt.getStockOperation().add(stockOpt);
-						   pdt.setRecordDate(stockOpt.getDateOperation());
-						   pdt.getMargins().add(margin);
-						if(stock.getNiveauStock() < 1) {
-							pdt.setStatus(ProductStatus.INSDISPONIBLE);
-						}
-						pdtRepo.save(pdt);
-					}
-					counter++;
+				//stock margin creation
+				Margin margin = new Margin();
+				       margin.setAmount(stockOpt.getQuantity() * (pdt.getOutStockPrice() - pdt.getInStockPrice()));
+				       margin.setSaleDate(stockOpt.getDateOperation());
+				       margin.setQuantity(stockOpt.getQuantity());
+				       margin.setProduct(pdt);
+				marginRepo.save(margin);
+				log.info("Here6");
+				
+				//product updating
+				   pdt.getStockOperation().add(stockOpt);
+				   pdt.setRecordDate(stockOpt.getDateOperation());
+				   pdt.getMargins().add(margin);
+				if(stock.getNiveauStock() < 1) {
+					pdt.setStatus(ProductStatus.INSDISPONIBLE);
 				}
+				pdtRepo.save(pdt);
+				log.info("Here7");
 			}
+			counter++;
+		}
 	}
 	
 	
