@@ -17,6 +17,7 @@ import com.beauty.taty_style.exceptions.StockNotFoundException;
 import com.beauty.taty_style.mappers.StockMapperImpl;
 import com.beauty.taty_style.models.*;
 import com.beauty.taty_style.repositories.BalanceRepository;
+import com.beauty.taty_style.repositories.ProductRepository;
 import com.beauty.taty_style.repositories.StockOperationRepository;
 import com.beauty.taty_style.repositories.StockRepository;
 
@@ -34,6 +35,7 @@ public class InstitutStockageServiceImpl implements InstitutStockageService{
     private  StockMapperImpl dtoMapper;
     private  BalanceRepository  balanceRepo;
     private  StockOperationRepository stockOptRepo;
+    private  ProductRepository       pdtRepo;
     
 	
 	
@@ -186,6 +188,14 @@ public class InstitutStockageServiceImpl implements InstitutStockageService{
 	@Override
 	public Long getProductPdtIdInStock(String reference) {
 		// TODO Auto-generated method stub
-		return stockOptRepo.findProductId(reference);
+		Long pdtId = stockOptRepo.findProductId(reference); 
+		if(pdtId != null) {
+		    return pdtId;
+		 }else {
+			Stock stck = stockRepo.findById(reference).orElse(null);
+			Product product = pdtRepo.findByDesignationLike(stck.getTitle().substring(stck.getTitle().lastIndexOf(' ') + 1));
+			
+			return product.getPdtId();
+		 }
 	}
 }

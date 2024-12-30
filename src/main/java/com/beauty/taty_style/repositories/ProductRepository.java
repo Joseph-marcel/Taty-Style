@@ -17,6 +17,7 @@ public interface ProductRepository extends JpaRepository<Product, Long>{
 	Page<Product> findByDesignationContainingOrderByRecordDate(String designation,PageRequest pageRequest);
 	
 	Product findByDesignation(String designation);
+	Product findByDesignationLike(String name);
 
 	
 }
