@@ -45,7 +45,7 @@ public class InstitutStockageServiceImpl implements InstitutStockageService{
 		Stock existingStock = getStockByTitle(stock.getTitle());
 		    if(existingStock == null) {
 		    	stock.setReference(UUID.randomUUID().toString());
-				stock.setTitle(stock.getTitle());
+				stock.setTitle("Stock " + stock.getTitle());
 				stock.setDateExistant(stock.getDateExistant());
 				stock.setNiveauStock(0);
 				stock.setValueStockCredit(0);

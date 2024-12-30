@@ -36,10 +36,11 @@ public class InstitutOperationServiceImpl implements InstitutOperationService{
 	@Override
 	public void creditStockOperation(StockOperation stockOpt, String ref,Long pdtId) {
 		// TODO Auto-generated method stub
-		
+		   
 		   Stock stock = stockRepo.getReferenceById(ref);
 		   Product pdt = dtoMapper.fromProduct(pdtService.getProductByPdtId(pdtId));
-		   
+		   pdt.setStockOperation(stockOptRepo.listStockOperation(pdtId));
+		  
 		   if(stock.getNiveauStock() == 0) {
 			   //Reinitialize stock before credit operation
 			   reinitialiseStockBeforeCreditStockOperation(ref);
