@@ -13,18 +13,16 @@ import com.beauty.taty_style.dtos.AllowanceDto;
 import com.beauty.taty_style.dtos.BillDto;
 import com.beauty.taty_style.dtos.BillPageDto;
 import com.beauty.taty_style.dtos.CustomerDto;
-import com.beauty.taty_style.dtos.PackDto;
 import com.beauty.taty_style.exceptions.InsuffissantDepositException;
+import com.beauty.taty_style.exceptions.NotFoundBillException;
 import com.beauty.taty_style.mappers.StockMapperImpl;
 import com.beauty.taty_style.models.Allowance;
 import com.beauty.taty_style.models.Bill;
 import com.beauty.taty_style.models.Customer;
 import com.beauty.taty_style.models.Director;
-import com.beauty.taty_style.models.Pack;
 import com.beauty.taty_style.repositories.AllowanceRepository;
 import com.beauty.taty_style.repositories.BillRepository;
 import com.beauty.taty_style.repositories.CustomerRepository;
-import com.beauty.taty_style.repositories.PackRepository;
 
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
@@ -40,7 +38,6 @@ public class InstitutBillServiceImpl implements InstitutBillService{
 	private AllowanceRepository allowanceRepo;
 	private CustomerRepository  custRepo;
 	private BillRepository      billRepo;
-	private PackRepository      packRepo;
 	private StockMapperImpl     dtoMapper;
 	
 	
@@ -77,16 +74,19 @@ public class InstitutBillServiceImpl implements InstitutBillService{
 
 	
 	@Override
-	public Allowance saveAllowance(Allowance allowance) {
+	public AllowanceDto saveAllowance(Allowance allowance) {
 		// TODO Auto-generated method stub
 		Allowance newAllowance = null;
-		if(allowance.getNumber() == null) {
+		Allowance checkedAllowance = getAllowanceByName(allowance.getName());
+		if(checkedAllowance == null) {
 			newAllowance = createAllowance(allowance);
 		}else {
 			newAllowance = updateAllowance(allowance);
 		}
 		
-		return newAllowance;
+		    AllowanceDto newAllowanceDto = dtoMapper.fromAllowance(newAllowance);
+		    
+		return newAllowanceDto;
 	}
 
 	
@@ -122,11 +122,12 @@ public class InstitutBillServiceImpl implements InstitutBillService{
 	}
 
 	@Override
-	public List<Allowance> getAllowances() {
+	public List<AllowanceDto> getAllowances() {
 		// TODO Auto-generated method stub
 		List<Allowance> allowances = allowanceRepo.findAllByOrderByNameAsc();
+		List<AllowanceDto> allowancesDto = allowances.stream().map(allowance -> dtoMapper.fromAllowance(allowance)).collect(Collectors.toList());
 		
-		return allowances;
+		return allowancesDto;
 	}
 
 	@Override
@@ -155,30 +156,34 @@ public class InstitutBillServiceImpl implements InstitutBillService{
 		// TODO Auto-generated method stub
 		CustomerDto cstmDto = createCustomer(bill.getCustomer());
 		Customer cstm = dtoMapper.fromCustomerDto(cstmDto);
-		Pack pack = createPack(bill.getPack());
-		getAllowances().forEach(allowance -> pack.getAllowances().add(allowance));
-		getAllowances().forEach(allowance -> allowance.getPacks().add(pack));
-		    
-		     if((bill.getDeposit() - cost()) < 0) throw new InsuffissantDepositException("Somme inférieur au montant total des prestations");
 		
-		         bill = Director.billBuilder()
-		        		        .billId(UUID.randomUUID().toString())
-		        		        .billDate(bill.getBillDate())
-		        		        .cost(cost())
-		        		        .deposit(bill.getDeposit())
-		        		        .refund(bill.getDeposit() - cost())
-		        		        .pack(pack)
-		        		        .customer(cstm)
-		        		        .build();	
-		         Bill savedBill = billRepo.save(bill);
+		bill.getAllowances().forEach(allowance -> saveAllowance(allowance));
+		
+	    if((bill.getDeposit() - bill.getCost()) < 0) throw new InsuffissantDepositException("Somme inférieur au montant total des prestations");
+	
+        bill = Director.billBuilder()
+        		       .billId(UUID.randomUUID().toString())
+        		       .billDate(bill.getBillDate())
+        		       .cost(bill.getCost())
+        		       .deposit(bill.getDeposit())
+        		       .refund(bill.getDeposit() - bill.getCost())
+        		       .allowances(bill.getAllowances())
+        		       .customer(cstm)
+        		       .build();	
+        Bill savedBill = billRepo.save(bill);
+        
 		         
 		return convertBill(savedBill);
 	}
 	
+	
 	@Override
-	public BillDto getBillByBillId(String billId) {
+	public BillDto getBillByBillId(String id)  throws NotFoundBillException {
 		// TODO Auto-generated method stub
-		Bill existingBill = billRepo.findById(billId).orElse(null);
+		Bill existingBill = billRepo.findByBillId(id);
+		
+		if(existingBill == null) throw new NotFoundBillException("Facture introuvable");
+
 		
 		return convertBill(existingBill);
 	}
@@ -217,12 +222,7 @@ public class InstitutBillServiceImpl implements InstitutBillService{
 	}
 
 	
-	@Override
-	public Pack createPack(Pack pack) {
-		// TODO Auto-generated method stub
-		
-		return packRepo.save(pack);
-	}
+	
 	
 
 	@Override
@@ -231,12 +231,11 @@ public class InstitutBillServiceImpl implements InstitutBillService{
 		BillDto billDto = dtoMapper.fromBill(bill);
 		Customer cstm = getCustomerByPhoneNumber(bill.getCustomer().getPhoneNumber());
 		        billDto.setCustomerDto(dtoMapper.fromCustomer(cstm));
-		List<AllowanceDto> allowanceDtos = bill.getPack().getAllowances().stream()
-                                                       .map(allowance -> dtoMapper.fromAllowance(allowance))
-                                                       .collect(Collectors.toList());
-		PackDto packDto = dtoMapper.fromPack(bill.getPack());
-		        packDto.setAllowancesDto(allowanceDtos);
-		        billDto.setPackDto(packDto);
+				
+				  List<AllowanceDto> allowanceDtos = bill.getAllowances().stream() .map(allowance -> dtoMapper.fromAllowance(allowance)).collect(Collectors.toList()); 
+				  
+				  billDto.setAllowanceDtos(allowanceDtos);
+				 
 		        
 		return billDto;
 	}
@@ -257,6 +256,8 @@ public class InstitutBillServiceImpl implements InstitutBillService{
 	  
 	  return billPageDto; 
 	  }
-	 
+
+
+
 
 }

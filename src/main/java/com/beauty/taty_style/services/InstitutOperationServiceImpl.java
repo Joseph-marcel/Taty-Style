@@ -84,17 +84,13 @@ public class InstitutOperationServiceImpl implements InstitutOperationService{
 		Product pdt = dtoMapper.fromProduct(pdtService.getProductByPdtId(pdtId));
 		pdt.setStockOperation(stockOptRepo.listStockOperation(pdtId));
 		pdt.setMargins(marginRepo.margins(pdtId));
-		pdt.getStockOperation().forEach(stockOpte -> System.out.println(stockOpte.getQuantity()));
 		
 		//Get the recent Credit Stock Operation
 		StockOperation recentCreditStockOpt = stockOptRepo.recentLastStockOperationCredit(ref);
 		
 		double counter = 1;
-		log.info("Here1");
 		while(counter < 2) {
-			log.info("Here2");	
 			if(recentCreditStockOpt.getProduct().getPdtId() == pdt.getPdtId()) {	
-				log.info("Here3");
 				if(stock.getNiveauStock() < stockOpt.getQuantity()) throw new InsuffisantQuantityInStock("Il n'y a plus que " + stock.getNiveauStock() + " en stock.");
 				//stockOperation creation debit
 				   stockOpt.setDateOperation(stockOpt.getDateOperation());
@@ -104,7 +100,7 @@ public class InstitutOperationServiceImpl implements InstitutOperationService{
 				   stockOpt.setType(OperationType.DEBIT);
 				   stockOpt.setStock(stock);
 				stockOptRepo.save(stockOpt);
-		        log.info("Here4");
+		       
 				//stock debit operation
 				stock.setDateExistant(stockOpt.getDateOperation());
 				   stock.setNiveauStock(stock.getNiveauStock() - stockOpt.getQuantity());
@@ -115,7 +111,6 @@ public class InstitutOperationServiceImpl implements InstitutOperationService{
 	               }
 				   stock.getStockOperations().add(stockOpt);
 				stockRepo.save(stock);
-				log.info("Here5");
 				
 				//stock margin creation
 				Margin margin = new Margin();
@@ -124,7 +119,6 @@ public class InstitutOperationServiceImpl implements InstitutOperationService{
 				       margin.setQuantity(stockOpt.getQuantity());
 				       margin.setProduct(pdt);
 				marginRepo.save(margin);
-				log.info("Here6");
 				
 				//product updating
 				   pdt.getStockOperation().add(stockOpt);
@@ -134,7 +128,6 @@ public class InstitutOperationServiceImpl implements InstitutOperationService{
 					pdt.setStatus(ProductStatus.INSDISPONIBLE);
 				}
 				pdtRepo.save(pdt);
-				log.info("Here7");
 			}
 			counter++;
 		}

@@ -4,7 +4,6 @@ package com.beauty.taty_style.models;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -33,6 +32,7 @@ public class Allowance {
 	private FashionStyle fashion;
 	@Enumerated(EnumType.STRING)
 	private Color color;
-	@ManyToMany
-	private List<Pack> packs = new ArrayList<Pack>();
+	@ManyToMany(mappedBy = "allowances")
+	private List<Bill> bills = new ArrayList<>();
+	
 }

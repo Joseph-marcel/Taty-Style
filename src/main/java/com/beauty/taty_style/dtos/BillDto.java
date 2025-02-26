@@ -2,6 +2,8 @@ package com.beauty.taty_style.dtos;
 
 
 import java.util.Date;
+import java.util.List;
+
 import lombok.Data;
 
 @Data
@@ -13,6 +15,6 @@ public class BillDto {
 	private double refund;
 	private Date   billDate;
 	private CustomerDto customerDto;
-	private PackDto packDto;
+	private List<AllowanceDto> allowanceDtos;
 
 }

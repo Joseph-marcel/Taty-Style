@@ -13,4 +13,6 @@ public interface BillRepository extends JpaRepository<Bill, String>{
 	
 	List<Bill> findAllByOrderByBillDateDesc();
 	Page<Bill> findByOrderByBillDateDesc(Pageable pageable);
+	Bill findByBillId(String id);
+	
 }

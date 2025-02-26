@@ -8,7 +8,6 @@ import com.beauty.taty_style.dtos.BalanceDto;
 import com.beauty.taty_style.dtos.BillDto;
 import com.beauty.taty_style.dtos.CustomerDto;
 import com.beauty.taty_style.dtos.MarginDto;
-import com.beauty.taty_style.dtos.PackDto;
 import com.beauty.taty_style.dtos.ProductDto;
 import com.beauty.taty_style.dtos.StockDto;
 import com.beauty.taty_style.dtos.StockOperationDto;
@@ -17,7 +16,6 @@ import com.beauty.taty_style.models.Balance;
 import com.beauty.taty_style.models.Bill;
 import com.beauty.taty_style.models.Customer;
 import com.beauty.taty_style.models.Margin;
-import com.beauty.taty_style.models.Pack;
 import com.beauty.taty_style.models.Product;
 import com.beauty.taty_style.models.Stock;
 import com.beauty.taty_style.models.StockOperation;
@@ -95,21 +93,6 @@ public class StockMapperImpl {
 		
 		return balance;
 	}
-    
-    public PackDto fromPack(Pack pack) {
-    	PackDto packDto = new PackDto();
-    	BeanUtils.copyProperties(pack, packDto);
-    	
-    	return packDto;
-    }
-    
-    
-    public Pack fromPackDto(PackDto packDto) {
-    	Pack pack = new Pack();
-    	BeanUtils.copyProperties(packDto, pack);
-    	
-    	return pack;
-    }
     
     
     public CustomerDto fromCustomer(Customer customer) {

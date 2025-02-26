@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-
+import com.beauty.taty_style.dtos.AllowanceDto;
 import com.beauty.taty_style.dtos.BillDto;
 import com.beauty.taty_style.dtos.BillPageDto;
 import com.beauty.taty_style.exceptions.InsuffissantDepositException;
@@ -29,7 +29,7 @@ public class BillController {
 	
 	
 	@PostMapping("/billing/allowance/create")
-	public Allowance createAllowance(@RequestBody Allowance allowance) {
+	public AllowanceDto createAllowance(@RequestBody Allowance allowance) {
 		
 		
 		return billService.saveAllowance(allowance);
@@ -44,23 +44,25 @@ public class BillController {
 	}
 	
 	
-	@GetMapping("/billing/bill/{billId}")
-	public BillDto getBill(@PathVariable String billId) {
+	@GetMapping("/billing/bill/{id}")
+	public BillDto getBill(@PathVariable String id) {
 		
 		
-		return billService.getBillByBillId(billId);
+		return billService.getBillByBillId(id);
 	}
 	
 	
 	@PutMapping("billing/bill/{billId}")
 	public BillDto updateBill(@PathVariable String billId,@RequestBody Bill bill) {
 		
+		
 		return billService.updateBill(billId, bill);
 	}
 	
 	
 	@GetMapping("/billing/allowances")
-	public List<Allowance> getAllowances(){
+	public List<AllowanceDto> getAllowances(){
+		
 		
 		return billService.getAllowances();
 	}
@@ -68,6 +70,7 @@ public class BillController {
 	
 	@GetMapping("/billing/bills")
 	public List<BillDto> getAllBills(){
+		
 		
 		return billService.getAllBills();
 	}
@@ -77,6 +80,7 @@ public class BillController {
 	public BillPageDto getAllBills(
 			 @RequestParam(name="page",defaultValue = "0") int page,
 			 @RequestParam(name="size",defaultValue = "2") int size){
+		
 		
 		return billService.getBillsByPage(page, size);
 	}

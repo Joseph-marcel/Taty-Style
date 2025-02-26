@@ -300,7 +300,7 @@ public class InstitutServiceImpl implements InstitutService{
 				            .deposit(bill.getDeposit())
 				            .refund(bill.getDeposit() - bill.getCost())
 				            .billDate(bill.getBillDate())
-				            .pack(null)
+				            .allowances(null)
 				            .customer(cstm)
 				            .build();
 		Bill savedInvoice = billRepo.save(invoice);
